@@ -141,19 +141,17 @@ export class MonitorUI extends ProgressBarUIBase {
       // Extract GPU index from monitorTitle (assuming format "X: GPU Name")
       const gpuIndex = parseInt(monitorSettings.monitorTitle?.split(':')[0] || '0');
 
-      // Initialize max VRAM if not set or  glitch
-      if (!this.maxVRAMUsed[gpuIndex] || this.maxVRAMUsed[gpuIndex]! > total) {
-        this.maxVRAMUsed[gpuIndex] = 0;
-      }
+      // Initialize max VRAM if not set or glitch
+      const currentMax = this.maxVRAMUsed[gpuIndex] ?? 0;
+      const validMax = (currentMax === 0 || currentMax > total) ? 0 : currentMax;
 
       // Update max VRAM if current usage is higher
-      if ( used > this.maxVRAMUsed[gpuIndex]!) {
-        this.maxVRAMUsed[gpuIndex] = used;
-      }
+      const newMax = used > validMax ? used : validMax;
+      this.maxVRAMUsed[gpuIndex] = newMax;
 
       postfix = ` - ${formatBytes(used)} / ${formatBytes(total)}`;
       // Add max VRAM to tooltip
-      postfix += ` Max: ${formatBytes(this.maxVRAMUsed[gpuIndex]!)}`;
+      postfix += ` Max: ${formatBytes(newMax)}`;
     }
 
     title = `${prefix}${title}${postfix}`;

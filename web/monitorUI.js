@@ -182,14 +182,12 @@ export class MonitorUI extends ProgressBarUIBase {
                 let postfix = '';
                 if (used !== undefined && total !== undefined) {
                     const gpuIndex = parseInt(monitorSettings.monitorTitle?.split(':')[0] || '0');
-                    if (!this.maxVRAMUsed[gpuIndex] || this.maxVRAMUsed[gpuIndex] > total) {
-                        this.maxVRAMUsed[gpuIndex] = 0;
-                    }
-                    if (used > this.maxVRAMUsed[gpuIndex]) {
-                        this.maxVRAMUsed[gpuIndex] = used;
-                    }
+                    const currentMax = this.maxVRAMUsed[gpuIndex] ?? 0;
+                    const validMax = (currentMax === 0 || currentMax > total) ? 0 : currentMax;
+                    const newMax = used > validMax ? used : validMax;
+                    this.maxVRAMUsed[gpuIndex] = newMax;
                     postfix = ` - ${formatBytes(used)} / ${formatBytes(total)}`;
-                    postfix += ` Max: ${formatBytes(this.maxVRAMUsed[gpuIndex])}`;
+                    postfix += ` Max: ${formatBytes(newMax)}`;
                 }
                 title = `${prefix}${title}${postfix}`;
                 if (monitorSettings.htmlMonitorRef) {

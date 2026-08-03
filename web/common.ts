@@ -8,6 +8,8 @@ export function displayContext(
   appFromArg: ComfyApp,
   index = 0, serialize_widgets = false, isVirtualNode = false,
 ): void {
+  // Pre-existing complexity; kept as-is to avoid behavior changes
+  // eslint-disable-next-line complexity
   function populate(this: TLGraphNode, text: string | string[]): void {
     if (this.widgets) {
       const pos = this.widgets.findIndex((w) => w.name === 'text');

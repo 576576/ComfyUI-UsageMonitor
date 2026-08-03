@@ -40,6 +40,8 @@ app.registerExtension({
         api.addEventListener('executed', this.fillMetadataWidget, false);
       }
 
+      // Pre-existing complexity; kept as-is to avoid behavior changes
+      /* eslint-disable complexity */
       fillMetadataWidget = (): Promise<string> => {
         return app.graphToPrompt()
         .then((workflow: any): string => {
@@ -72,6 +74,7 @@ app.registerExtension({
           return result;
         });
       };
+      /* eslint-enable complexity */
     }
 
     // I'm not sure for what they're using prototype and lots of black magic, don't change the order!

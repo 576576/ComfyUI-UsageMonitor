@@ -19,7 +19,7 @@ export abstract class ProgressBarUIBase {
     public rootElement: HTMLElement | null | undefined,
   ) {
     // IMPORTANT duplicate on crystools-save
-    if (this.rootElement && this.rootElement.children.length === 0) {
+    if (this.rootElement?.children.length === 0) {
       this.rootElement.setAttribute('id', this.rootId);
       this.rootElement.classList.add(this.htmlClassMonitor);
       this.rootElement.classList.add(this.constructor.name);

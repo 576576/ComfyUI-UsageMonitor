@@ -31,7 +31,7 @@ export class ProgressBarUIBase {
             writable: true,
             value: 'crystools-monitors-container'
         });
-        if (this.rootElement && this.rootElement.children.length === 0) {
+        if (this.rootElement?.children.length === 0) {
             this.rootElement.setAttribute('id', this.rootId);
             this.rootElement.classList.add(this.htmlClassMonitor);
             this.rootElement.classList.add(this.constructor.name);
