@@ -7,11 +7,12 @@ export declare class MonitorUI {
     private monitorVRAMSettings;
     private monitorTemperatureSettings;
     private currentRate;
+    private translate;
     protected htmlClassMonitor: string;
     lastMonitor: number;
     styleSheet: HTMLStyleElement;
     maxVRAMUsed: Record<number, number>;
-    constructor(rootElement: HTMLElement, monitorCPUElement: TMonitorSettings, monitorRAMElement: TMonitorSettings, monitorHDDElement: TMonitorSettings, monitorGPUSettings: TMonitorSettings[], monitorVRAMSettings: TMonitorSettings[], monitorTemperatureSettings: TMonitorSettings[], currentRate: number);
+    constructor(rootElement: HTMLElement, monitorCPUElement: TMonitorSettings, monitorRAMElement: TMonitorSettings, monitorHDDElement: TMonitorSettings, monitorGPUSettings: TMonitorSettings[], monitorVRAMSettings: TMonitorSettings[], monitorTemperatureSettings: TMonitorSettings[], currentRate: number, translate: (key: string) => string);
     createDOM: () => void;
     createDOMGPUMonitor: (monitorSettings?: TMonitorSettings) => void;
     orderMonitors: () => void;

@@ -16,6 +16,7 @@ export class MonitorUI {
     private monitorVRAMSettings: TMonitorSettings[],
     private monitorTemperatureSettings: TMonitorSettings[],
     private currentRate: number,
+    private translate: (key: string) => string,
   ) {
     // Initialize the root container (id + classes)
     if (this.rootElement.children.length === 0) {
@@ -157,7 +158,7 @@ export class MonitorUI {
 
       postfix = ` - ${formatBytes(used)} / ${formatBytes(total)}`;
       // Add max VRAM to tooltip
-      postfix += ` ${app.translate('Max:')} ${formatBytes(newMax)}`;
+      postfix += ` ${this.translate('Max:')} ${formatBytes(newMax)}`;
     }
 
     title = `${prefix}${title}${postfix}`;

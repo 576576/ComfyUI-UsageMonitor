@@ -126,6 +126,63 @@ class UsageMonitorMonitor {
             writable: true,
             value: 30
         });
+        Object.defineProperty(this, "translations", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: {}
+        });
+        Object.defineProperty(this, "translate", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: (key) => {
+                // Support nested keys with dot notation, e.g. 'desc.Refresh interval'.
+                const parts = key.split('.');
+                let value = this.translations;
+                for (const part of parts) {
+                    if (value === null || value === undefined || typeof value !== 'object') {
+                        return key;
+                    }
+                    value = value[part];
+                }
+                return typeof value === 'string' ? value : key;
+            }
+        });
+        Object.defineProperty(this, "getCurrentLanguage", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: () => {
+                try {
+                    const comfyLang = app.translation?.currentLanguage?.() ?? app.translation?.language;
+                    if (comfyLang) {
+                        return comfyLang;
+                    }
+                }
+                catch (error) {
+                    // ignore
+                }
+                return navigator.language || 'en';
+            }
+        });
+        Object.defineProperty(this, "getTranslationsFromServer", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: async () => {
+                try {
+                    const lang = this.getCurrentLanguage();
+                    const resp = await api.fetchApi(`/usagemonitor/translations?lang=${encodeURIComponent(lang)}`, { cache: 'no-store' });
+                    if (resp.status === 200) {
+                        this.translations = await resp.json();
+                    }
+                }
+                catch (error) {
+                    console.error('UsageMonitor: failed to load translations', error);
+                }
+            }
+        });
         Object.defineProperty(this, "createSettingsRate", {
             enumerable: true,
             configurable: true,
@@ -133,9 +190,9 @@ class UsageMonitorMonitor {
             value: () => {
                 this.settingsRate = {
                     id: 'UsageMonitor.RefreshRate',
-                    name: 'Refresh per second',
-                    category: ['UsageMonitor', this.menuPrefix + ' Configuration', 'refresh'],
-                    tooltip: 'Refresh interval desc',
+                    name: this.translate('Refresh per second'),
+                    category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'refresh'],
+                    tooltip: this.translate('desc.Refresh interval'),
                     type: 'slider',
                     attrs: {
                         min: 0,
@@ -196,9 +253,9 @@ class UsageMonitorMonitor {
             value: () => {
                 this.settingsMonitorWidth = {
                     id: this.monitorWidthId,
-                    name: 'Pixel Width',
-                    category: ['UsageMonitor', this.menuPrefix + ' Configuration', 'width'],
-                    tooltip: 'Monitor width desc',
+                    name: this.translate('Pixel Width'),
+                    category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'width'],
+                    tooltip: this.translate('desc.Monitor width'),
                     type: 'slider',
                     attrs: {
                         min: 60,
@@ -231,9 +288,9 @@ class UsageMonitorMonitor {
             value: () => {
                 this.settingsMonitorHeight = {
                     id: this.monitorHeightId,
-                    name: 'Pixel Height',
-                    category: ['UsageMonitor', this.menuPrefix + ' Configuration', 'height'],
-                    tooltip: 'Monitor height desc',
+                    name: this.translate('Pixel Height'),
+                    category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'height'],
+                    tooltip: this.translate('desc.Monitor height'),
                     type: 'slider',
                     attrs: {
                         min: 16,
@@ -266,10 +323,10 @@ class UsageMonitorMonitor {
             value: () => {
                 this.monitorCPUElement = {
                     id: 'UsageMonitor.ShowCpu',
-                    name: 'CPU Usage',
-                    category: ['UsageMonitor', 'Hardware', 'Cpu'],
+                    name: this.translate('CPU Usage'),
+                    category: [this.translate('UsageMonitor'), this.translate('Hardware'), 'Cpu'],
                     type: 'boolean',
-                    label: 'CPU',
+                    label: this.translate('CPU'),
                     symbol: '%',
                     defaultValue: true,
                     htmlMonitorRef: undefined,
@@ -290,10 +347,10 @@ class UsageMonitorMonitor {
             value: () => {
                 this.monitorRAMElement = {
                     id: 'UsageMonitor.ShowRam',
-                    name: 'RAM Used',
-                    category: ['UsageMonitor', 'Hardware', 'Ram'],
+                    name: this.translate('RAM Used'),
+                    category: [this.translate('UsageMonitor'), this.translate('Hardware'), 'Ram'],
                     type: 'boolean',
-                    label: 'RAM',
+                    label: this.translate('RAM'),
                     symbol: '%',
                     defaultValue: true,
                     htmlMonitorRef: undefined,
@@ -320,8 +377,8 @@ class UsageMonitorMonitor {
                 label += moreThanOneGPU ? index : '';
                 const monitorGPUNElement = {
                     id: 'UsageMonitor.ShowGpuUsage' + convertNumberToPascalCase(index),
-                    name: ' Usage',
-                    category: ['UsageMonitor', `${this.menuPrefix} Show GPU [${index}] ${name}`, 'Usage'],
+                    name: this.translate('Usage'),
+                    category: [this.translate('UsageMonitor'), `GPU ${index} - ${name}`, 'Usage'],
                     type: 'boolean',
                     label,
                     symbol: '%',
@@ -354,8 +411,8 @@ class UsageMonitorMonitor {
                 label += moreThanOneGPU ? index : '';
                 const monitorVRAMNElement = {
                     id: 'UsageMonitor.ShowGpuVram' + convertNumberToPascalCase(index),
-                    name: 'VRAM',
-                    category: ['UsageMonitor', `${this.menuPrefix} Show GPU [${index}] ${name}`, 'VRAM'],
+                    name: this.translate('VRAM'),
+                    category: [this.translate('UsageMonitor'), `GPU ${index} - ${name}`, 'VRAM'],
                     type: 'boolean',
                     label: label,
                     symbol: '%',
@@ -388,11 +445,11 @@ class UsageMonitorMonitor {
                 label += moreThanOneGPU ? index : '';
                 const monitorTemperatureNElement = {
                     id: 'UsageMonitor.ShowGpuTemperature' + convertNumberToPascalCase(index),
-                    name: 'Temperature',
-                    category: ['UsageMonitor', `${this.menuPrefix} Show GPU [${index}] ${name}`, 'Temperature'],
+                    name: this.translate('Temperature'),
+                    category: [this.translate('UsageMonitor'), `GPU ${index} - ${name}`, 'Temperature'],
                     type: 'boolean',
                     label: label,
-                    symbol: '°',
+                    symbol: '℃',
                     monitorTitle: `${index}: ${name}`,
                     defaultValue: true,
                     htmlMonitorRef: undefined,
@@ -417,10 +474,10 @@ class UsageMonitorMonitor {
             value: () => {
                 this.monitorHDDElement = {
                     id: 'UsageMonitor.ShowHdd',
-                    name: 'Show HDD Used',
-                    category: ['UsageMonitor', 'Show Hard Disk', 'Show'],
+                    name: this.translate('Show Storage Used'),
+                    category: [this.translate('UsageMonitor'), this.translate('Show Storage'), 'Show'],
                     type: 'boolean',
-                    label: 'HDD',
+                    label: this.translate('Storage'),
                     symbol: '%',
                     defaultValue: false,
                     htmlMonitorRef: undefined,
@@ -434,8 +491,8 @@ class UsageMonitorMonitor {
                 };
                 this.settingsHDD = {
                     id: 'UsageMonitor.WhichHdd',
-                    name: 'Partition to show',
-                    category: ['UsageMonitor', 'Show Hard Disk', 'Which'],
+                    name: this.translate('Partition to show'),
+                    category: [this.translate('UsageMonitor'), this.translate('Show Storage'), 'Which'],
                     type: 'combo',
                     defaultValue: '/',
                     options: [],
@@ -622,7 +679,7 @@ class UsageMonitorMonitor {
                     return;
                 }
                 try {
-                    await app.loadTranslations();
+                    await this.getTranslationsFromServer();
                 }
                 catch (error) {
                     console.error('UsageMonitor: failed to load translations', error);
@@ -641,7 +698,7 @@ class UsageMonitorMonitor {
                 });
                 this.usagemonitorButtonGroup = new ComfyButtonGroup();
                 app.menu?.settingsGroup.element.before(this.usagemonitorButtonGroup.element);
-                this.monitorUI = new MonitorUI(this.usagemonitorButtonGroup.element, this.monitorCPUElement, this.monitorRAMElement, this.monitorHDDElement, this.monitorGPUSettings, this.monitorVRAMSettings, this.monitorTemperatureSettings, currentRate);
+                this.monitorUI = new MonitorUI(this.usagemonitorButtonGroup.element, this.monitorCPUElement, this.monitorRAMElement, this.monitorHDDElement, this.monitorGPUSettings, this.monitorVRAMSettings, this.monitorTemperatureSettings, currentRate, this.translate);
                 this.updateDisplay(this.menuDisplayOption);
                 this.registerListeners();
             }

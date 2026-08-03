@@ -13,11 +13,11 @@
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
 </p>
 
-直接在 ComfyUI 菜单上实时查看系统资源（CPU、GPU、内存、显存、GPU 温度和磁盘空间），帮助您识别工作流中的瓶颈，并知道何时该重启服务器、卸载模型或关闭一些标签页。
+直接在 ComfyUI 菜单上实时查看系统资源（CPU、GPU、内存、显存、GPU 温度和硬盘空间），帮助您识别工作流中的瓶颈，并知道何时该重启服务器、卸载模型或关闭一些标签页。
 
 ## 资源监控
 
-**🎉 现在您终于可以在菜单上实时查看 ComfyUI 使用的资源（CPU、GPU、内存、显存、GPU 温度和磁盘空间）了！**
+**🎉 现在您终于可以在菜单上实时查看 ComfyUI 使用的资源（CPU、GPU、内存、显存、GPU 温度和硬盘空间）了！**
 
 横向：  
 ![Monitors](assets/images/monitor1.webp)
@@ -39,7 +39,7 @@
 
 功能 | 描述
 --- | ---
-实时监控 | 在 ComfyUI 菜单上实时显示 CPU、GPU、内存、显存、GPU 温度和磁盘空间
+实时监控 | 在 ComfyUI 菜单上实时显示 CPU、GPU、内存、显存、GPU 温度和硬盘空间
 支持 NVIDIA 与 AMD | 通过 `nvidia-ml-py` 支持 CUDA，通过 `ADLXPybind` 支持 AMD（Windows）
 横向与纵向布局 | 选择适合您工作流的监控布局
 完全可配置 | 刷新频率和显示的资源均可在设置菜单中配置

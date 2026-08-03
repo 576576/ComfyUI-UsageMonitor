@@ -1,7 +1,7 @@
 import { app } from './comfy/index.js';
 import { createStyleSheet, formatBytes } from './utils.js';
 export class MonitorUI {
-    constructor(rootElement, monitorCPUElement, monitorRAMElement, monitorHDDElement, monitorGPUSettings, monitorVRAMSettings, monitorTemperatureSettings, currentRate) {
+    constructor(rootElement, monitorCPUElement, monitorRAMElement, monitorHDDElement, monitorGPUSettings, monitorVRAMSettings, monitorTemperatureSettings, currentRate, translate) {
         Object.defineProperty(this, "rootElement", {
             enumerable: true,
             configurable: true,
@@ -49,6 +49,12 @@ export class MonitorUI {
             configurable: true,
             writable: true,
             value: currentRate
+        });
+        Object.defineProperty(this, "translate", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: translate
         });
         Object.defineProperty(this, "htmlClassMonitor", {
             enumerable: true,
@@ -192,7 +198,7 @@ export class MonitorUI {
                     const newMax = used > validMax ? used : validMax;
                     this.maxVRAMUsed[gpuIndex] = newMax;
                     postfix = ` - ${formatBytes(used)} / ${formatBytes(total)}`;
-                    postfix += ` ${app.translate('Max:')} ${formatBytes(newMax)}`;
+                    postfix += ` ${this.translate('Max:')} ${formatBytes(newMax)}`;
                 }
                 title = `${prefix}${title}${postfix}`;
                 if (monitorSettings.htmlMonitorRef) {
