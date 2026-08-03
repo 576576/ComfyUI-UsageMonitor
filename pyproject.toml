@@ -8,14 +8,15 @@ dependencies = ["deepdiff", "torch", "numpy", "Pillow", "nvidia-ml-py", "amdsmi"
 classifiers = [
   "Operating System :: OS Independent",
   "Environment :: GPU :: NVIDIA CUDA",
+  "Environment :: GPU",
 ]
 
 [project.urls]
-Repository = "https://github.com/crystian/ComfyUI-UsageMonitor"
-Documentation = "https://github.com/crystian/ComfyUI-UsageMonitor/blob/main/README.md"
-"Bug Tracker" = "https://github.com/crystian/ComfyUI-UsageMonitor/issues"
+Repository = "https://github.com/576576/ComfyUI-UsageMonitor"
+Documentation = "https://github.com/576576/ComfyUI-UsageMonitor/blob/main/README.md"
+"Bug Tracker" = "https://github.com/576576/ComfyUI-UsageMonitor/issues"
 
 [tool.comfy]
-PublisherId = "crystian"
+PublisherId = "576576"
 DisplayName = "ComfyUI-UsageMonitor"
-Icon = "https://raw.githubusercontent.com/crystian/ComfyUI-UsageMonitor/main/docs/screwdriver.png"
+Icon = "https://raw.githubusercontent.com/576576/ComfyUI-UsageMonitor/main/docs/screwdriver.png"
