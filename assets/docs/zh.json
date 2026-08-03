@@ -21,7 +21,7 @@
 
   "_comment_block1": "── 描述 ──",
   "descriptions": {
-    "tagline": "🪛 ComfyUI 实时资源监控 🪛",
+    "tagline": "ComfyUI 实时资源监控",
     "desc1": "直接在 ComfyUI 菜单上实时查看系统资源（CPU、GPU、内存、显存、GPU 温度和磁盘空间），帮助您识别工作流中的瓶颈，并知道何时该重启服务器、卸载模型或关闭一些标签页。",
     "monitorIntro": "**🎉 现在您终于可以在菜单上实时查看 ComfyUI 使用的资源（CPU、GPU、内存、显存、GPU 温度和磁盘空间）了！**",
     "horizontal": "横向：",
@@ -29,7 +29,7 @@
     "monitorConfig": "现在您可以识别工作流中的瓶颈，知道何时该重启服务器、卸载模型甚至关闭一些标签页！您还可以配置刷新频率以及要显示哪些资源：",
     "notesTitle": "注意事项",
     "installIntro": "1. 安装 [ComfyUI](https://github.com/comfyanonymous/ComfyUI)。\n2. 将此仓库克隆到 `custom_nodes`（见下文）。\n3. 启动 ComfyUI。",
-    "amdNote": "> **AMD 用户（ROCm）：** 本分支开箱即用地支持 AMD GPU 监控（使用 `amdsmi`）——按上述说明正常安装即可。旧版 `AMD` 分支仍可供参考。",
+    "amdNote": "> **AMD 用户（ROCm）：** 本分支开箱即用地支持 AMD GPU 监控（使用 `amdsmi`）——按上述说明正常安装即可。",
     "managerDesc": "在[管理器](https://github.com/ltdrdata/ComfyUI-Manager.git)中搜索 `usagemonitor` 并安装。",
     "ack": "本项目是原版 [**ComfyUI-Crystools**](https://github.com/crystian/ComfyUI-Crystools)（由 [Crystian](https://github.com/crystian) 创建）的更名延续。  \n原作品的功劳归于原作者。"
   },

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../assets/images/icon.png" width="64" alt="ComfyUI-UsageMonitor">
+</p>
+
 <h1 align="center">ComfyUI-UsageMonitor</h1>
 
 <p align="center">
@@ -8,8 +12,6 @@
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-blue" alt="Platform">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
 </p>
-
-**_🪛 A real-time resource monitor for ComfyUI 🪛_**
 
 Watch your system resources (CPU, GPU, RAM, VRAM, GPU temperature and disk space) directly on the ComfyUI menu in real-time, so you can identify bottlenecks in your workflow and know when it is time to restart the server, unload models or close some tabs.
 
@@ -57,7 +59,7 @@ cd ComfyUI-UsageMonitor
 pip install -r requirements.txt
 ```
 
-> **For AMD users (ROCm):** GPU monitoring works out of the box on this branch (uses `amdsmi`) — install normally as described above. The legacy `AMD` branch is still available for reference.
+> **For AMD users (ROCm):** GPU monitoring works out of the box on this branch (uses `amdsmi`) — install normally as described above.
 
 ### Install from manager
 

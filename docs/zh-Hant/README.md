@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../assets/images/icon.png" width="64" alt="ComfyUI-UsageMonitor">
+</p>
+
 <h1 align="center">ComfyUI-UsageMonitor</h1>
 
 <p align="center">
@@ -8,8 +12,6 @@
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-blue" alt="Platform">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
 </p>
-
-**_🪛 ComfyUI 即時資源監控 🪛_**
 
 直接在 ComfyUI 選單上即時查看系統資源（CPU、GPU、記憶體、顯存、GPU 溫度和磁碟空間），協助您識別工作流程中的瓶頸，並知道何時該重新啟動伺服器、卸載模型或關閉一些分頁。
 
@@ -57,7 +59,7 @@ cd ComfyUI-UsageMonitor
 pip install -r requirements.txt
 ```
 
-> **AMD 使用者（ROCm）：** 本分支開箱即用地支援 AMD GPU 監控（使用 `amdsmi`）——依照上述說明正常安裝即可。舊版 `AMD` 分支仍可供參考。
+> **AMD 使用者（ROCm）：** 本分支開箱即用地支援 AMD GPU 監控（使用 `amdsmi`）——依照上述說明正常安裝即可。
 
 ### 從管理員安裝
 
