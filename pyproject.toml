@@ -19,4 +19,4 @@ Documentation = "https://github.com/576576/ComfyUI-UsageMonitor/blob/main/README
 [tool.comfy]
 PublisherId = "576576"
 DisplayName = "ComfyUI-UsageMonitor"
-Icon = "https://raw.githubusercontent.com/576576/ComfyUI-UsageMonitor/main/docs/screwdriver.png"
+Icon = "https://raw.githubusercontent.com/576576/ComfyUI-UsageMonitor/main/assets/images/screwdriver.png"

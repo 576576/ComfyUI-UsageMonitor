@@ -1,0 +1,63 @@
+{
+  "_comment_meta": "── Meta ──",
+  "lang": "English",
+  "langCode": "en",
+  "langRegion": "United States",
+  "langRegionCode": ["US", "GB"],
+  "platforms": ["Windows", "Linux"],
+  "license": "MIT",
+  "title": "ComfyUI-UsageMonitor",
+
+  "_comment_headings": "── Section Headings ──",
+  "headings": {
+    "monitor": "Resources monitor",
+    "features": "Features",
+    "install": "Installation",
+    "manager": "Install from manager",
+    "arch": "Project structure",
+    "ack": "Acknowledgements",
+    "license": "License"
+  },
+
+  "_comment_block1": "── Descriptions ──",
+  "descriptions": {
+    "tagline": "🪛 A real-time resource monitor for ComfyUI 🪛",
+    "desc1": "Watch your system resources (CPU, GPU, RAM, VRAM, GPU temperature and disk space) directly on the ComfyUI menu in real-time, so you can identify bottlenecks in your workflow and know when it is time to restart the server, unload models or close some tabs.",
+    "monitorIntro": "**🎉 Finally, you can see the resources used by ComfyUI (CPU, GPU, RAM, VRAM, GPU Temp and space) on the menu in real-time!**",
+    "horizontal": "Horizontal:",
+    "vertical": "Vertical:",
+    "monitorConfig": "Now you can identify the bottlenecks in your workflow and know when it's time to restart the server, unload models or even close some tabs! You can configure the refresh rate and which resources to show:",
+    "notesTitle": "Notes",
+    "installIntro": "1. Install [ComfyUI](https://github.com/comfyanonymous/ComfyUI).\n2. Clone this repo into `custom_nodes` (see below).\n3. Start up ComfyUI.",
+    "amdNote": "> **For AMD users (ROCm):** GPU monitoring works out of the box on this branch (uses `amdsmi`) — install normally as described above. The legacy `AMD` branch is still available for reference.",
+    "managerDesc": "Search for `usagemonitor` in the [manager](https://github.com/ltdrdata/ComfyUI-Manager.git) and install it.",
+    "ack": "This project is a renamed continuation of the original [**ComfyUI-Crystools**](https://github.com/crystian/ComfyUI-Crystools) created by [Crystian](https://github.com/crystian).  \nAll credit for the original work goes to the original author."
+  },
+
+  "_comment_notes": "── Notes ──",
+  "notes": {
+    "note1": "The GPU data is available when you use CUDA (NVIDIA) or ROCm (AMD).",
+    "note2": "This extension needs ComfyUI 1915 (or higher).",
+    "note3": "The cost of the monitor is low (0.1 to 0.5% of utilization), you can disable it from settings (`Refresh rate` to `0`).",
+    "note4": "Data comes from these libraries: [psutil](https://pypi.org/project/psutil/), [torch](https://pytorch.org/), [nvidia-ml-py](https://pypi.org/project/nvidia-ml-py/) (official NVIDIA library) and [amdsmi](https://pypi.org/project/amdsmi/) (official AMD library)."
+  },
+
+  "_comment_features": "── Features ──",
+  "features": {
+    "title": ["Feature", "Description"],
+    "feat1": ["Real-time monitoring", "CPU, GPU, RAM, VRAM, GPU temperature and disk space shown live on the ComfyUI menu"],
+    "feat2": ["NVIDIA & AMD support", "CUDA via `nvidia-ml-py`, ROCm via `amdsmi`"],
+    "feat3": ["Horizontal & vertical layouts", "Pick the monitor layout that fits your workflow"],
+    "feat4": ["Fully configurable", "Refresh rate and shown resources are configurable from the settings menu"]
+  },
+
+  "_comment_arch": "── Architecture ──",
+  "archTree": {
+    "title": "ComfyUI-UsageMonitor",
+    "dir1": ["general", "hardware info (CPU / GPU / HDD)"],
+    "dir2": ["server", "monitor API routes"],
+    "dir3": ["web", "frontend monitor UI"],
+    "dir4": ["core", "config & logging"],
+    "dir5": ["assets", "images & i18n docs"]
+  }
+}

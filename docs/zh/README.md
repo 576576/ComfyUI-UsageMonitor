@@ -1,7 +1,7 @@
 <h1 align="center">ComfyUI-UsageMonitor</h1>
 
 <p align="center">
-中文 (简体) &nbsp;|&nbsp; <a href="docs/zh-Hant/README.md">中文 (繁體)</a> &nbsp;|&nbsp; <a href="docs/en/README.md">English</a>
+中文 (简体) &nbsp;|&nbsp; <a href="../zh-Hant/README.md">中文 (繁體)</a> &nbsp;|&nbsp; <a href="../en/README.md">English</a>
 </p>
 
 <p align="center">
@@ -18,14 +18,14 @@
 **🎉 现在您终于可以在菜单上实时查看 ComfyUI 使用的资源（CPU、GPU、内存、显存、GPU 温度和磁盘空间）了！**
 
 横向：  
-![Monitors](assets/images/monitor1.webp)
+![Monitors](../../assets/images/monitor1.webp)
 
 纵向：  
-![Monitors](assets/images/monitor3.webp)
+![Monitors](../../assets/images/monitor3.webp)
 
 现在您可以识别工作流中的瓶颈，知道何时该重启服务器、卸载模型甚至关闭一些标签页！您还可以配置刷新频率以及要显示哪些资源：
 
-![Monitors](assets/images/monitor-settings.png)
+![Monitors](../../assets/images/monitor-settings.png)
 
 > **注意事项:**
 > - 使用 CUDA（NVIDIA）或 ROCm（AMD）时即可获取 GPU 数据。
