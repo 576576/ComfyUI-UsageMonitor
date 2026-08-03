@@ -194,9 +194,9 @@ class UsageMonitorMonitor {
   createSettingsMonitorWidth = (): void => {
     this.settingsMonitorWidth = {
       id: this.monitorWidthId,
-      name: this.translate('Pixel Width'),
+      name: this.translate('Capsule Width'),
       category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'width'],
-      tooltip: this.translate('desc.Monitor width'),
+      tooltip: this.translate('desc.Capsule width'),
       type: 'slider',
       attrs: {
         min: 60,
@@ -226,9 +226,9 @@ class UsageMonitorMonitor {
   createSettingsMonitorHeight = (): void => {
     this.settingsMonitorHeight = {
       id: this.monitorHeightId,
-      name: this.translate('Pixel Height'),
+      name: this.translate('Capsule Height'),
       category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'height'],
-      tooltip: this.translate('desc.Monitor height'),
+      tooltip: this.translate('desc.Capsule height'),
       type: 'slider',
       attrs: {
         min: 16,
@@ -336,11 +336,11 @@ class UsageMonitorMonitor {
   createSettingsCPUTemp = (): void => {
     this.monitorCPUTempElement = {
       id: 'UsageMonitor.ShowCpuTemp',
-      name: this.translate('CPU') + ' ' + this.translate('Temperature'),
+      name: this.translate('Temperature'),
       category: [this.translate('UsageMonitor'), `Cpu 0 - ${this.cpuName}`, 'Temperature'],
       type: 'boolean',
-      label: this.translate('CPU') + ' ' + this.translate('Temperature'),
-      symbol: '℃',
+      label: this.translate('Temperature'),
+      symbol: '°C',
       defaultValue: false,
       htmlMonitorRef: undefined,
       htmlMonitorSliderRef: undefined,
@@ -361,7 +361,7 @@ class UsageMonitorMonitor {
     // RAM Variables
     this.monitorRAMElement = {
       id: 'UsageMonitor.ShowRam',
-      name: this.translate('RAM') + ' ' + this.translate('Usage'),
+      name: this.translate('RAM') + this.translate('Usage2'),
       category: [this.translate('UsageMonitor'), this.translate('Hardware'), 'Ram'],
       type: 'boolean',
       label: this.translate('RAM'),
@@ -425,7 +425,7 @@ class UsageMonitorMonitor {
     // GPU VRAM Variables
     const monitorVRAMNElement: TMonitorSettings = {
       id: 'UsageMonitor.ShowGpuVram' + convertNumberToPascalCase(index),
-      name: this.translate('VRAM'),
+      name: this.translate('VRAM') + this.translate('Usage2'),
       category: [this.translate('UsageMonitor'), `GPU ${index} - ${name}`, 'VRAM'],
       type: 'boolean',
       label: label,
@@ -464,7 +464,7 @@ class UsageMonitorMonitor {
       category: [this.translate('UsageMonitor'), `GPU ${index} - ${name}`, 'Temperature'],
       type: 'boolean',
       label: label,
-      symbol: '℃',
+      symbol: '°C',
       monitorTitle: `${index}: ${name}`,
       defaultValue: true,
       htmlMonitorRef: undefined,
@@ -488,8 +488,8 @@ class UsageMonitorMonitor {
     // HDD Variables
     this.monitorHDDElement = {
       id: 'UsageMonitor.ShowHdd',
-      name: this.translate('Show Storage') + ' ' + this.translate('Usage'),
-      category: [this.translate('UsageMonitor'), this.translate('Show Storage'), 'Show'],
+      name: this.translate('Storage') + this.translate('Usage2'),
+      category: [this.translate('UsageMonitor'), this.translate('Storage'), 'Show'],
       type: 'boolean',
       label: this.translate('Storage'),
       symbol: '%',
@@ -509,7 +509,7 @@ class UsageMonitorMonitor {
     this.settingsHDD = {
       id: 'UsageMonitor.WhichHdd',
       name: this.translate('Partition to show'),
-      category: [this.translate('UsageMonitor'), this.translate('Show Storage'), 'Which'],
+      category: [this.translate('UsageMonitor'), this.translate('Storage'), 'Which'],
       type: 'combo',
       defaultValue: '/',
       options: [],

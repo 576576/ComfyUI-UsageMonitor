@@ -193,6 +193,7 @@ export class MonitorUI {
                     return;
                 }
                 if (percent < 0) {
+                    monitorSettings.htmlMonitorLabelRef.innerHTML = 'NaN';
                     return;
                 }
                 const prefix = monitorSettings.monitorTitle ? monitorSettings.monitorTitle + ' - ' : '';
@@ -284,7 +285,7 @@ export class MonitorUI {
                 htmlMonitorLabel.classList.add('usagemonitor-label');
                 monitorSettings.htmlMonitorLabelRef = htmlMonitorLabel;
                 htmlMonitorContent.append(htmlMonitorLabel);
-                htmlMonitorLabel.innerHTML = '0%';
+                htmlMonitorLabel.innerHTML = '0' + (monitorSettings.symbol || '%');
                 return monitorSettings.htmlMonitorRef;
             }
         });
