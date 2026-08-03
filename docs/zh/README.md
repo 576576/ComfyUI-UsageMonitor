@@ -77,7 +77,7 @@ ComfyUI-UsageMonitor/
 ## 致谢
 
 本项目是原版 [**ComfyUI-Crystools**](https://github.com/crystian/ComfyUI-Crystools)（由 [Crystian](https://github.com/crystian) 创建）的更名延续。  
-原创作品的全部功劳归于原作者。
+原作品的功劳归于原作者。
 
 ## 许可证
 
