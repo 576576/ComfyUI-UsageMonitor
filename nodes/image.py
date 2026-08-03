@@ -64,7 +64,7 @@ class CImagePreviewFromImage(PreviewImage):
         }
 
         if image is not None:
-            saved = self.save_images(image, "crystools/i", prompt, extra_pnginfo)
+            saved = self.save_images(image, "usagemonitor/i", prompt, extra_pnginfo)
             image = saved["ui"]["images"][0]
             image_path = Path(self.output_dir).joinpath(image["subfolder"], image["filename"])
 

@@ -1,15 +1,15 @@
 import { app, api, ComfyWidgets, LiteGraph, TLGraphNode } from './comfy/index.js';
 import { commonPrefix, displayContext } from './common.js';
 app.registerExtension({
-    name: 'Crystools.Debugger.ConsoleAny',
+    name: 'UsageMonitor.Debugger.ConsoleAny',
     beforeRegisterNodeDef(nodeType, nodeData, appFromArg) {
-        if (nodeData.name === 'Show any [Crystools]') {
+        if (nodeData.name === 'Show any [UsageMonitor]') {
             displayContext(nodeType, appFromArg, 3);
         }
     },
 });
 app.registerExtension({
-    name: 'Crystools.Debugger.Metadata',
+    name: 'UsageMonitor.Debugger.Metadata',
     registerCustomNodes() {
         class MetadataNode extends TLGraphNode {
             constructor() {
@@ -69,8 +69,8 @@ app.registerExtension({
                 api.addEventListener('executed', this.fillMetadataWidget, false);
             }
         }
-        LiteGraph.registerNodeType('Show Metadata [Crystools]', MetadataNode);
-        MetadataNode.category = `crystools ${commonPrefix}/Debugger`;
+        LiteGraph.registerNodeType('Show Metadata [UsageMonitor]', MetadataNode);
+        MetadataNode.category = `usagemonitor ${commonPrefix}/Debugger`;
         MetadataNode.shape = LiteGraph.BOX_SHAPE;
         MetadataNode.title = `${commonPrefix} Show Metadata`;
     },

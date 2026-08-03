@@ -12,13 +12,13 @@ export enum MenuDisplayOptions {
 }
 
 export abstract class ProgressBarUIBase {
-  protected htmlClassMonitor = 'crystools-monitors-container';
+  protected htmlClassMonitor = 'usagemonitor-monitors-container';
 
   protected constructor(
     public rootId: string,
     public rootElement: HTMLElement | null | undefined,
   ) {
-    // IMPORTANT duplicate on crystools-save
+    // IMPORTANT duplicate on usagemonitor-save
     if (this.rootElement?.children.length === 0) {
       this.rootElement.setAttribute('id', this.rootId);
       this.rootElement.classList.add(this.htmlClassMonitor);

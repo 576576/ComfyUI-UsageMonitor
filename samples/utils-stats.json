@@ -260,7 +260,7 @@
     },
     {
       "id": 10,
-      "type": "Stats system [Crystools]",
+      "type": "Stats system [UsageMonitor]",
       "pos": [
         1275,
         175
@@ -291,7 +291,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Stats system [Crystools]"
+        "Node name for S&R": "Stats system [UsageMonitor]"
       }
     },
     {

@@ -29,7 +29,7 @@ export class ProgressBarUIBase {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: 'crystools-monitors-container'
+            value: 'usagemonitor-monitors-container'
         });
         if (this.rootElement?.children.length === 0) {
             this.rootElement.setAttribute('id', this.rootId);

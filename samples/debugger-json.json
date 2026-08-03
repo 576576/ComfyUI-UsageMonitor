@@ -4,7 +4,7 @@
   "nodes": [
     {
       "id": 4,
-      "type": "Show any to JSON [Crystools]",
+      "type": "Show any to JSON [UsageMonitor]",
       "pos": [
         900,
         175
@@ -32,12 +32,12 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Show any to JSON [Crystools]"
+        "Node name for S&R": "Show any to JSON [UsageMonitor]"
       }
     },
     {
       "id": 2,
-      "type": "Show any to JSON [Crystools]",
+      "type": "Show any to JSON [UsageMonitor]",
       "pos": [
         1350,
         50
@@ -65,12 +65,12 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Show any to JSON [Crystools]"
+        "Node name for S&R": "Show any to JSON [UsageMonitor]"
       }
     },
     {
       "id": 3,
-      "type": "Show any [Crystools]",
+      "type": "Show any [UsageMonitor]",
       "pos": [
         475,
         250
@@ -90,12 +90,12 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Show any [Crystools]"
+        "Node name for S&R": "Show any [UsageMonitor]"
       }
     },
     {
       "id": 1,
-      "type": "Load image with metadata [Crystools]",
+      "type": "Load image with metadata [UsageMonitor]",
       "pos": [
         100,
         75
@@ -141,7 +141,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Load image with metadata [Crystools]"
+        "Node name for S&R": "Load image with metadata [UsageMonitor]"
       },
       "widgets_values": [
         "tests/ComfyUI_00314_20-8-euler.png",

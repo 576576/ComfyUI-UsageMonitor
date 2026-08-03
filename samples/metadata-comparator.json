@@ -4,7 +4,7 @@
   "nodes": [
     {
       "id": 1,
-      "type": "Load image with metadata [Crystools]",
+      "type": "Load image with metadata [UsageMonitor]",
       "pos": [
         100,
         75
@@ -46,7 +46,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Load image with metadata [Crystools]"
+        "Node name for S&R": "Load image with metadata [UsageMonitor]"
       },
       "widgets_values": [
         "tests/ComfyUI_00314_20-8-euler.png",
@@ -55,7 +55,7 @@
     },
     {
       "id": 9,
-      "type": "Load image with metadata [Crystools]",
+      "type": "Load image with metadata [UsageMonitor]",
       "pos": [
         100,
         500
@@ -97,7 +97,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Load image with metadata [Crystools]"
+        "Node name for S&R": "Load image with metadata [UsageMonitor]"
       },
       "widgets_values": [
         "tests/ComfyUI_00315_21-81-heun.png",
@@ -106,7 +106,7 @@
     },
     {
       "id": 10,
-      "type": "Metadata comparator [Crystools]",
+      "type": "Metadata comparator [UsageMonitor]",
       "pos": [
         550,
         100
@@ -139,7 +139,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Metadata comparator [Crystools]"
+        "Node name for S&R": "Metadata comparator [UsageMonitor]"
       }
     }
   ],

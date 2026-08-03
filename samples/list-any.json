@@ -4,7 +4,7 @@
   "nodes": [
     {
       "id": 10,
-      "type": "Primitive integer [Crystools]",
+      "type": "Primitive integer [UsageMonitor]",
       "pos": [
         175,
         525
@@ -28,7 +28,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Primitive integer [Crystools]"
+        "Node name for S&R": "Primitive integer [UsageMonitor]"
       },
       "widgets_values": [
         1
@@ -36,7 +36,7 @@
     },
     {
       "id": 11,
-      "type": "Primitive float [Crystools]",
+      "type": "Primitive float [UsageMonitor]",
       "pos": [
         175,
         625
@@ -60,7 +60,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Primitive float [Crystools]"
+        "Node name for S&R": "Primitive float [UsageMonitor]"
       },
       "widgets_values": [
         1
@@ -68,7 +68,7 @@
     },
     {
       "id": 9,
-      "type": "Primitive string multiline [Crystools]",
+      "type": "Primitive string multiline [UsageMonitor]",
       "pos": [
         90,
         275
@@ -92,7 +92,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Primitive string multiline [Crystools]"
+        "Node name for S&R": "Primitive string multiline [UsageMonitor]"
       },
       "widgets_values": [
         "sample\nmultiline"
@@ -100,7 +100,7 @@
     },
     {
       "id": 12,
-      "type": "Primitive string [Crystools]",
+      "type": "Primitive string [UsageMonitor]",
       "pos": [
         240,
         175
@@ -124,7 +124,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Primitive string [Crystools]"
+        "Node name for S&R": "Primitive string [UsageMonitor]"
       },
       "widgets_values": [
         "sample"
@@ -132,7 +132,7 @@
     },
     {
       "id": 14,
-      "type": "Load image with metadata [Crystools]",
+      "type": "Load image with metadata [UsageMonitor]",
       "pos": [
         165,
         750
@@ -174,7 +174,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Load image with metadata [Crystools]"
+        "Node name for S&R": "Load image with metadata [UsageMonitor]"
       },
       "widgets_values": [
         "tests/ComfyUI_00314_20-8-euler.png",
@@ -183,7 +183,7 @@
     },
     {
       "id": 7,
-      "type": "List of any [Crystools]",
+      "type": "List of any [UsageMonitor]",
       "pos": [
         600,
         325
@@ -249,12 +249,12 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "List of any [Crystools]"
+        "Node name for S&R": "List of any [UsageMonitor]"
       }
     },
     {
       "id": 15,
-      "type": "Show any [Crystools]",
+      "type": "Show any [UsageMonitor]",
       "pos": [
         850,
         325
@@ -274,12 +274,12 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Show any [Crystools]"
+        "Node name for S&R": "Show any [UsageMonitor]"
       }
     },
     {
       "id": 8,
-      "type": "Primitive boolean [Crystools]",
+      "type": "Primitive boolean [UsageMonitor]",
       "pos": [
         175,
         75
@@ -303,7 +303,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Primitive boolean [Crystools]"
+        "Node name for S&R": "Primitive boolean [UsageMonitor]"
       },
       "widgets_values": [
         true

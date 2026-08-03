@@ -325,7 +325,7 @@
     },
     {
       "id": 11,
-      "type": "Switch conditioning [Crystools]",
+      "type": "Switch conditioning [UsageMonitor]",
       "pos": [
         950,
         200
@@ -361,7 +361,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Switch conditioning [Crystools]"
+        "Node name for S&R": "Switch conditioning [UsageMonitor]"
       },
       "widgets_values": [
         true

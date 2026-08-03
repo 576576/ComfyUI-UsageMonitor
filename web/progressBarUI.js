@@ -1,7 +1,7 @@
 import { EStatus, ProgressBarUIBase } from './progressBarUIBase.js';
 export class ProgressBarUI extends ProgressBarUIBase {
     constructor(rootElement, showSectionFlag, centerNode) {
-        super('crystools-progressBar-root', rootElement);
+        super('usagemonitor-progressBar-root', rootElement);
         Object.defineProperty(this, "rootElement", {
             enumerable: true,
             configurable: true,
@@ -64,14 +64,14 @@ export class ProgressBarUI extends ProgressBarUIBase {
                 this.rootElement.setAttribute('title', 'click to see the current working node');
                 this.rootElement.addEventListener('click', this.centerNode);
                 const progressBar = document.createElement('div');
-                progressBar.classList.add('crystools-progress-bar');
+                progressBar.classList.add('usagemonitor-progress-bar');
                 this.rootElement.append(progressBar);
                 const progressSlider = document.createElement('div');
                 this.htmlProgressSliderRef = progressSlider;
-                progressSlider.classList.add('crystools-slider');
+                progressSlider.classList.add('usagemonitor-slider');
                 progressBar.append(this.htmlProgressSliderRef);
                 const progressLabel = document.createElement('div');
-                progressLabel.classList.add('crystools-label');
+                progressLabel.classList.add('usagemonitor-label');
                 progressLabel.innerHTML = '0%';
                 this.htmlProgressLabelRef = progressLabel;
                 progressBar.append(this.htmlProgressLabelRef);

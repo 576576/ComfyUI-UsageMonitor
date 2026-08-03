@@ -4,7 +4,7 @@
   "nodes": [
     {
       "id": 5,
-      "type": "Show any [Crystools]",
+      "type": "Show any [UsageMonitor]",
       "pos": [
         1100,
         575
@@ -24,12 +24,12 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Show any [Crystools]"
+        "Node name for S&R": "Show any [UsageMonitor]"
       }
     },
     {
       "id": 4,
-      "type": "Show any [Crystools]",
+      "type": "Show any [UsageMonitor]",
       "pos": [
         1100,
         50
@@ -49,12 +49,12 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Show any [Crystools]"
+        "Node name for S&R": "Show any [UsageMonitor]"
       }
     },
     {
       "id": 8,
-      "type": "Show any [Crystools]",
+      "type": "Show any [UsageMonitor]",
       "pos": [
         100,
         900
@@ -74,12 +74,12 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Show any [Crystools]"
+        "Node name for S&R": "Show any [UsageMonitor]"
       }
     },
     {
       "id": 1,
-      "type": "Load image with metadata [Crystools]",
+      "type": "Load image with metadata [UsageMonitor]",
       "pos": [
         100,
         75
@@ -121,7 +121,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Load image with metadata [Crystools]"
+        "Node name for S&R": "Load image with metadata [UsageMonitor]"
       },
       "widgets_values": [
         "tests/ComfyUI_00314_20-8-euler.png",
@@ -130,7 +130,7 @@
     },
     {
       "id": 2,
-      "type": "Metadata extractor [Crystools]",
+      "type": "Metadata extractor [UsageMonitor]",
       "pos": [
         125,
         625
@@ -206,12 +206,12 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Metadata extractor [Crystools]"
+        "Node name for S&R": "Metadata extractor [UsageMonitor]"
       }
     },
     {
       "id": 6,
-      "type": "Show any [Crystools]",
+      "type": "Show any [UsageMonitor]",
       "pos": [
         1100,
         900
@@ -231,12 +231,12 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Show any [Crystools]"
+        "Node name for S&R": "Show any [UsageMonitor]"
       }
     },
     {
       "id": 7,
-      "type": "Show any [Crystools]",
+      "type": "Show any [UsageMonitor]",
       "pos": [
         600,
         900
@@ -256,12 +256,12 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Show any [Crystools]"
+        "Node name for S&R": "Show any [UsageMonitor]"
       }
     },
     {
       "id": 3,
-      "type": "Show any [Crystools]",
+      "type": "Show any [UsageMonitor]",
       "pos": [
         625,
         50
@@ -281,7 +281,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Show any [Crystools]"
+        "Node name for S&R": "Show any [UsageMonitor]"
       }
     }
   ],

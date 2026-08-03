@@ -260,7 +260,7 @@
     },
     {
       "id": 10,
-      "type": "Save image with extra metadata [Crystools]",
+      "type": "Save image with extra metadata [UsageMonitor]",
       "pos": [
         1450,
         200
@@ -291,7 +291,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Save image with extra metadata [Crystools]"
+        "Node name for S&R": "Save image with extra metadata [UsageMonitor]"
       },
       "widgets_values": [
         "ComfyUI",
@@ -301,7 +301,7 @@
     },
     {
       "id": 11,
-      "type": "Show any to JSON [Crystools]",
+      "type": "Show any to JSON [UsageMonitor]",
       "pos": [
         1925,
         200
@@ -329,7 +329,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Show any to JSON [Crystools]"
+        "Node name for S&R": "Show any to JSON [UsageMonitor]"
       }
     }
   ],

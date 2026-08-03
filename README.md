@@ -1,4 +1,4 @@
-# comfyui-crystools [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/crystian77) <a src="https://colab.research.google.com/assets/colab-badge.svg" href="https://colab.research.google.com/drive/1xiTiPmZkcIqNOsLQPO1UNCdJZqgK3U5k?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"></a>
+# comfyui-usagemonitor [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/crystian77) <a src="https://colab.research.google.com/assets/colab-badge.svg" href="https://colab.research.google.com/drive/1xiTiPmZkcIqNOsLQPO1UNCdJZqgK3U5k?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"></a>
 
 **_🪛 A powerful set of tools for your belt when you work with ComfyUI 🪛_**
 
@@ -56,7 +56,7 @@ You can see the progress of your workflow with a progress bar on the menu!
 
 ![Progress bar](./docs/progress-bar.png)
 
-https://github.com/crystian/comfyui-crystools/assets/3886806/35cc1257-2199-4b85-936e-2e31d892959c
+https://github.com/crystian/comfyui-usagemonitor/assets/3886806/35cc1257-2199-4b85-936e-2e31d892959c
 
 Additionally, it shows the time elapsed at the end of the workflow, and you can `click` on it to see the **current working node.** 
 
@@ -245,8 +245,8 @@ It can be any type of information that supports text and JSON.
 **Note:** The data is saved as special "exif" (as ComfyUI does) in the png file; you can read it with [Load image with metadata](#node-load-image-with-metadata).
 
 > **Important:**
-> - If you want to save your workflow with a particular name and your data as creator, you need to use the [ComfyUI-Crystools-save](https://github.com/crystian/ComfyUI-Crystools-save) extension; try it!
-![Crystools-save](./docs/crystools-save.png)
+> - If you want to save your workflow with a particular name and your data as creator, you need to use the [ComfyUI-UsageMonitor-save](https://github.com/crystian/ComfyUI-UsageMonitor-save) extension; try it!
+![UsageMonitor-save](./docs/usagemonitor-save.png)
 
 
 <br />
@@ -515,7 +515,7 @@ You have predefined switches (string, latent, image, conditioning) but you can u
 
 ## Changelog
 
-### Crystools
+### UsageMonitor
 
 ### 1.27.0 (17/08/2025)
 - revert the lower case on name, cannot change on registry ¯\_(ツ)_/¯
@@ -585,7 +585,7 @@ You have predefined switches (string, latent, image, conditioning) but you can u
 - Typescript added!
 
 ### 1.6.0 (11/01/2024)
-- Fix issue [#7](https://github.com/crystian/comfyui-crystools/issues/7) to the thread deadlock on concurrency
+- Fix issue [#7](https://github.com/crystian/comfyui-usagemonitor/issues/7) to the thread deadlock on concurrency
 
 ### 1.5.0 (10/01/2024)
 - Improvements on the resources monitor and how handle the threads
@@ -606,13 +606,13 @@ You have predefined switches (string, latent, image, conditioning) but you can u
 - First release
 
 
-### Crystools-save - DEPRECATED (01/06/2025)
+### UsageMonitor-save - DEPRECATED (01/06/2025)
 
 ### 1.1.0 (07/01/2024)
-- Labeling updated according to the new version of Crystools (this project)
+- Labeling updated according to the new version of UsageMonitor (this project)
 
 ### 1.0.0 (29/12/2023)
-- Created another extension to save the info about the author on workflow: [ComfyUI-Crystools-save](https://github.com/crystian/ComfyUI-Crystools-save)
+- Created another extension to save the info about the author on workflow: [ComfyUI-UsageMonitor-save](https://github.com/crystian/ComfyUI-UsageMonitor-save)
 
 ---
 
@@ -623,8 +623,8 @@ You have predefined switches (string, latent, image, conditioning) but you can u
 2. Clone this repo into `custom_nodes`:
     ```
     cd ComfyUI/custom_nodes
-    git clone https://github.com/crystian/comfyui-crystools.git
-    cd comfyui-crystools
+    git clone https://github.com/crystian/comfyui-usagemonitor.git
+    cd comfyui-usagemonitor
     pip install -r requirements.txt
     ```
 3. Start up ComfyUI.
@@ -636,14 +636,14 @@ If you are an AMD user with Linux, you can try the AMD branch:
 
   ```
   cd ComfyUI/custom_nodes
-  git clone -b AMD https://github.com/crystian/comfyui-crystools.git
-  cd comfyui-crystools
+  git clone -b AMD https://github.com/crystian/comfyui-usagemonitor.git
+  cd comfyui-usagemonitor
   pip install -r requirements.txt
   ```
 
 ### Install from manager
 
-Search for `crystools` in the [manager](https://github.com/ltdrdata/ComfyUI-Manager.git) and install it.
+Search for `usagemonitor` in the [manager](https://github.com/ltdrdata/ComfyUI-Manager.git) and install it.
 
 ### Using on Google Colab
 
@@ -661,13 +661,20 @@ This is the URL to access ComfyUI: https://identifying-complications-fw-some.try
 
 ## Use
 
-You can use it as any other node, just using the menu in the category `crystools` or double clicking on the canvas (I recommended using the "oo" to fast filter), all nodes were post fixing with `[Crystools]`.
+You can use it as any other node, just using the menu in the category `usagemonitor` or double clicking on the canvas (I recommended using the "oo" to fast filter), all nodes were post fixing with `[UsageMonitor]`.
 
 ![Menu](./docs/menu.png)
 ![shortcut](./docs/shortcut.png)
 
-If for some reason you need to see the logs, you can define the environment variable `CRYSTOOLS_LOGLEVEL` and set the [value](https://docs.python.org/es/3/howto/logging.html).
+If for some reason you need to see the logs, you can define the environment variable `USAGEMONITOR_LOGLEVEL` and set the [value](https://docs.python.org/es/3/howto/logging.html).
 
 ---
 
 Made with ❤️ by Crystian.
+
+---
+
+## Acknowledgements
+
+This project is a renamed continuation of the original [**ComfyUI-Crystools**](https://github.com/crystian/ComfyUI-Crystools) created by [Crystian](https://github.com/crystian).  
+All credit for the original work goes to the original author.

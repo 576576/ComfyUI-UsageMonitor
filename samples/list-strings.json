@@ -4,7 +4,7 @@
   "nodes": [
     {
       "id": 3,
-      "type": "Primitive string [Crystools]",
+      "type": "Primitive string [UsageMonitor]",
       "pos": [
         50,
         100
@@ -28,7 +28,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Primitive string [Crystools]"
+        "Node name for S&R": "Primitive string [UsageMonitor]"
       },
       "widgets_values": [
         "folder2"
@@ -36,7 +36,7 @@
     },
     {
       "id": 2,
-      "type": "List of strings [Crystools]",
+      "type": "List of strings [UsageMonitor]",
       "pos": [
         350,
         100
@@ -79,7 +79,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "List of strings [Crystools]"
+        "Node name for S&R": "List of strings [UsageMonitor]"
       },
       "widgets_values": [
         "folder1",
@@ -95,7 +95,7 @@
     },
     {
       "id": 6,
-      "type": "Show any [Crystools]",
+      "type": "Show any [UsageMonitor]",
       "pos": [
         775,
         100
@@ -115,12 +115,12 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Show any [Crystools]"
+        "Node name for S&R": "Show any [UsageMonitor]"
       }
     },
     {
       "id": 5,
-      "type": "Show any [Crystools]",
+      "type": "Show any [UsageMonitor]",
       "pos": [
         775,
         325
@@ -140,7 +140,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Show any [Crystools]"
+        "Node name for S&R": "Show any [UsageMonitor]"
       }
     }
   ],

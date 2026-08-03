@@ -16,15 +16,15 @@ export class MonitorUI extends ProgressBarUIBase {
     private monitorTemperatureSettings: TMonitorSettings[],
     private currentRate: number,
   ) {
-    super('crystools-monitors-root', rootElement);
+    super('usagemonitor-monitors-root', rootElement);
     this.createDOM();
 
-    this.styleSheet = createStyleSheet('crystools-monitors-size');
+    this.styleSheet = createStyleSheet('usagemonitor-monitors-size');
   }
 
   createDOM = (): void => {
     if (!this.rootElement) {
-      throw Error('Crystools: MonitorUI - Container not found');
+      throw Error('UsageMonitor: MonitorUI - Container not found');
     }
 
     // this.container.style.order = '2';
@@ -195,7 +195,7 @@ export class MonitorUI extends ProgressBarUIBase {
 
     const htmlMain = document.createElement('div');
     htmlMain.classList.add(monitorSettings.id);
-    htmlMain.classList.add('crystools-monitor');
+    htmlMain.classList.add('usagemonitor-monitor');
 
     monitorSettings.htmlMonitorRef = htmlMain;
 
@@ -204,16 +204,16 @@ export class MonitorUI extends ProgressBarUIBase {
     }
 
     const htmlMonitorText = document.createElement('div');
-    htmlMonitorText.classList.add('crystools-text');
+    htmlMonitorText.classList.add('usagemonitor-text');
     htmlMonitorText.innerHTML = monitorSettings.label;
     htmlMain.append(htmlMonitorText);
 
     const htmlMonitorContent = document.createElement('div');
-    htmlMonitorContent.classList.add('crystools-content');
+    htmlMonitorContent.classList.add('usagemonitor-content');
     htmlMain.append(htmlMonitorContent);
 
     const htmlMonitorSlider = document.createElement('div');
-    htmlMonitorSlider.classList.add('crystools-slider');
+    htmlMonitorSlider.classList.add('usagemonitor-slider');
     if (monitorSettings.cssColorFinal) {
       htmlMonitorSlider.style.backgroundColor =
         `color-mix(in srgb, ${monitorSettings.cssColorFinal} 0%, ${monitorSettings.cssColor})`;
@@ -224,7 +224,7 @@ export class MonitorUI extends ProgressBarUIBase {
     htmlMonitorContent.append(htmlMonitorSlider);
 
     const htmlMonitorLabel = document.createElement('div');
-    htmlMonitorLabel.classList.add('crystools-label');
+    htmlMonitorLabel.classList.add('usagemonitor-label');
     monitorSettings.htmlMonitorLabelRef = htmlMonitorLabel;
     htmlMonitorContent.append(htmlMonitorLabel);
     htmlMonitorLabel.innerHTML = '0%';
@@ -233,7 +233,7 @@ export class MonitorUI extends ProgressBarUIBase {
 
   updateMonitorSize = (width: number, height: number): void => {
     // eslint-disable-next-line max-len
-    this.styleSheet.innerText = `#crystools-monitors-root .crystools-monitor .crystools-content {height: ${height}px; width: ${width}px;}`;
+    this.styleSheet.innerText = `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-content {height: ${height}px; width: ${width}px;}`;
   };
 
   showMonitor = (monitorSettings: TMonitorSettings, value: boolean): void => {

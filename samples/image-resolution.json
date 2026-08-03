@@ -287,7 +287,7 @@
     },
     {
       "id": 10,
-      "type": "Get resolution [Crystools]",
+      "type": "Get resolution [UsageMonitor]",
       "pos": [
         1475,
         100
@@ -321,12 +321,12 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Get resolution [Crystools]"
+        "Node name for S&R": "Get resolution [UsageMonitor]"
       }
     },
     {
       "id": 12,
-      "type": "Load image with metadata [Crystools]",
+      "type": "Load image with metadata [UsageMonitor]",
       "pos": [
         1350,
         625
@@ -368,7 +368,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Load image with metadata [Crystools]"
+        "Node name for S&R": "Load image with metadata [UsageMonitor]"
       },
       "widgets_values": [
         "tests/ComfyUI_00314_20-8-euler.png",
@@ -377,7 +377,7 @@
     },
     {
       "id": 13,
-      "type": "Get resolution [Crystools]",
+      "type": "Get resolution [UsageMonitor]",
       "pos": [
         1725,
         625
@@ -411,7 +411,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Get resolution [Crystools]"
+        "Node name for S&R": "Get resolution [UsageMonitor]"
       }
     }
   ],

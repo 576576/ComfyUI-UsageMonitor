@@ -2,19 +2,19 @@ import { app, api } from './comfy/index.js';
 import { commonPrefix } from './common.js';
 import { ProgressBarUI } from './progressBarUI.js';
 import { ComfyKeyMenuDisplayOption, EStatus, MenuDisplayOptions } from './progressBarUIBase.js';
-class CrystoolsProgressBar {
+class UsageMonitorProgressBar {
     constructor() {
         Object.defineProperty(this, "idExtensionName", {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: 'Crystools.progressBar'
+            value: 'UsageMonitor.progressBar'
         });
         Object.defineProperty(this, "idShowProgressBar", {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: 'Crystools.ProgressBar'
+            value: 'UsageMonitor.ProgressBar'
         });
         Object.defineProperty(this, "defaultShowStatus", {
             enumerable: true,
@@ -72,7 +72,7 @@ class CrystoolsProgressBar {
                 app.ui.settings.addSetting({
                     id: this.idShowProgressBar,
                     name: 'Show progress bar',
-                    category: ['Crystools', this.menuPrefix + ' Progress Bar', 'Show'],
+                    category: ['UsageMonitor', this.menuPrefix + ' Progress Bar', 'Show'],
                     tooltip: 'This apply only on "Disabled" (old) menu',
                     type: 'boolean',
                     defaultValue: this.defaultShowStatus,
@@ -109,14 +109,14 @@ class CrystoolsProgressBar {
                     this.updateDisplay(e.detail.value);
                 });
                 const progressBarElement = document.createElement('div');
-                progressBarElement.classList.add('crystools-monitors-container');
+                progressBarElement.classList.add('usagemonitor-monitors-container');
                 this.progressBarUI = new ProgressBarUI(progressBarElement, (this.menuDisplayOption === MenuDisplayOptions.Disabled), this.centerNode);
                 const parentElement = document.getElementById('queue-button');
                 if (parentElement) {
                     parentElement.insertAdjacentElement('afterend', progressBarElement);
                 }
                 else {
-                    console.error('Crystools: parentElement to move monitors not found!', parentElement);
+                    console.error('UsageMonitor: parentElement to move monitors not found!', parentElement);
                 }
                 this.createSettings();
                 this.updateDisplay(this.menuDisplayOption);
@@ -180,8 +180,8 @@ class CrystoolsProgressBar {
         });
     }
 }
-const crystoolsProgressBar = new CrystoolsProgressBar();
+const usagemonitorProgressBar = new UsageMonitorProgressBar();
 app.registerExtension({
-    name: crystoolsProgressBar.idExtensionName,
-    setup: crystoolsProgressBar.setup,
+    name: usagemonitorProgressBar.idExtensionName,
+    setup: usagemonitorProgressBar.setup,
 });

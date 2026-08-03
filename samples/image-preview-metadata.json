@@ -4,7 +4,7 @@
   "nodes": [
     {
       "id": 1,
-      "type": "Load image with metadata [Crystools]",
+      "type": "Load image with metadata [UsageMonitor]",
       "pos": [
         150,
         200
@@ -46,7 +46,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Load image with metadata [Crystools]"
+        "Node name for S&R": "Load image with metadata [UsageMonitor]"
       },
       "widgets_values": [
         "tests/ComfyUI_00314_20-8-euler.png",
@@ -55,7 +55,7 @@
     },
     {
       "id": 2,
-      "type": "Preview from metadata [Crystools]",
+      "type": "Preview from metadata [UsageMonitor]",
       "pos": [
         575,
         200
@@ -83,7 +83,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Preview from metadata [Crystools]"
+        "Node name for S&R": "Preview from metadata [UsageMonitor]"
       }
     }
   ],

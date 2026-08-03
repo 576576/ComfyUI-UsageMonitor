@@ -2,8 +2,8 @@ from enum import Enum
 
 
 class TEXTS(Enum):
-    CUSTOM_NODE_NAME = "Crystools"
-    LOGGER_PREFIX = "Crystools"
+    CUSTOM_NODE_NAME = "UsageMonitor"
+    LOGGER_PREFIX = "UsageMonitor"
     CONCAT = "concatenated"
     INACTIVE_MSG = "inactive"
     INVALID_METADATA_MSG = "Invalid metadata raw"
@@ -12,7 +12,7 @@ class TEXTS(Enum):
 
 class CATEGORY(Enum):
     TESTING = "_for_testing"
-    MAIN = "crystools 🪛"
+    MAIN = "usagemonitor 🪛"
     PRIMITIVE = "/Primitive"
     DEBUGGER = "/Debugger"
     LIST = "/List"

@@ -2,32 +2,32 @@ import { app, TLGraphNode, ComfyApp } from './comfy/index.js';
 import type { ComfyNode } from './comfy/index.js';
 import { displayContext } from './common.js';
 
-const crystoolsExtensionsSerialized: Record<string, string> = {
-  // 'External parameter from JSON file [Crystools]': 'Crystools.Utils.ExternalParameterFromJson',
-  'Read JSON file [Crystools]': 'Crystools.Utils.ReadJsonFile',
-  'JSON extractor [Crystools]': 'Crystools.Utils.JsonExtractor',
+const usagemonitorExtensionsSerialized: Record<string, string> = {
+  // 'External parameter from JSON file [UsageMonitor]': 'UsageMonitor.Utils.ExternalParameterFromJson',
+  'Read JSON file [UsageMonitor]': 'UsageMonitor.Utils.ReadJsonFile',
+  'JSON extractor [UsageMonitor]': 'UsageMonitor.Utils.JsonExtractor',
 };
 
-const crystoolsExtensions: Record<string, string> = {
-  'Get resolution [Crystools]': 'Crystools.Image.GetResolution',
-  'Preview from image [Crystools]': 'Crystools.Image.PreviewFromImage',
-  'Preview from metadata [Crystools]': 'Crystools.Image.PreviewFromMetadata',
-  'Metadata comparator [Crystools]': 'Crystools.Metadata.MetadataComparator',
-  'Stats system [Crystools]': 'Crystools.Utils.StatsSystem',
-  'Show any to JSON [Crystools]': 'Crystools.Debugger.ConsoleAnyToJson',
+const usagemonitorExtensions: Record<string, string> = {
+  'Get resolution [UsageMonitor]': 'UsageMonitor.Image.GetResolution',
+  'Preview from image [UsageMonitor]': 'UsageMonitor.Image.PreviewFromImage',
+  'Preview from metadata [UsageMonitor]': 'UsageMonitor.Image.PreviewFromMetadata',
+  'Metadata comparator [UsageMonitor]': 'UsageMonitor.Metadata.MetadataComparator',
+  'Stats system [UsageMonitor]': 'UsageMonitor.Utils.StatsSystem',
+  'Show any to JSON [UsageMonitor]': 'UsageMonitor.Debugger.ConsoleAnyToJson',
 };
 
-Object.keys(crystoolsExtensionsSerialized).forEach(prop => {
+Object.keys(usagemonitorExtensionsSerialized).forEach(prop => {
   // @ts-ignore
-  crystoolsExtensions[prop] = crystoolsExtensionsSerialized[prop];
+  usagemonitorExtensions[prop] = usagemonitorExtensionsSerialized[prop];
 });
 
-Object.keys(crystoolsExtensions).forEach(key => {
+Object.keys(usagemonitorExtensions).forEach(key => {
   app.registerExtension({
-    name: crystoolsExtensions[key],
+    name: usagemonitorExtensions[key],
     beforeRegisterNodeDef(nodeType: ComfyNode, nodeData: TLGraphNode, appFromArg: ComfyApp) {
       if (nodeData.name === key) {
-        if (nodeData.name in crystoolsExtensionsSerialized) {
+        if (nodeData.name in usagemonitorExtensionsSerialized) {
           displayContext(nodeType, appFromArg, 0, true); // serialize_widgets = true
         } else {
           displayContext(nodeType, appFromArg, 0);

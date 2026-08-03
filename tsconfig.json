@@ -52,7 +52,7 @@
     "noEmit": false
   },
   "include": [
-//    "./custom_nodes/comfyui-crystools/web/*.ts",
+//    "./custom_nodes/comfyui-usagemonitor/web/*.ts",
 //    "../../../web/*.ts",
 //    "../../web/*.ts",
     "web/*.ts",

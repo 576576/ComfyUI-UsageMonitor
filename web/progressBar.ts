@@ -3,9 +3,9 @@ import { commonPrefix } from './common.js';
 import { ProgressBarUI } from './progressBarUI.js';
 import { ComfyKeyMenuDisplayOption, EStatus, MenuDisplayOptions } from './progressBarUIBase.js';
 
-class CrystoolsProgressBar {
-  idExtensionName = 'Crystools.progressBar';
-  idShowProgressBar = 'Crystools.ProgressBar';
+class UsageMonitorProgressBar {
+  idExtensionName = 'UsageMonitor.progressBar';
+  idShowProgressBar = 'UsageMonitor.ProgressBar';
   defaultShowStatus = true;
   menuPrefix = commonPrefix;
   menuDisplayOption: MenuDisplayOptions = MenuDisplayOptions.Disabled;
@@ -22,7 +22,7 @@ class CrystoolsProgressBar {
     app.ui.settings.addSetting({
       id: this.idShowProgressBar,
       name: 'Show progress bar',
-      category: ['Crystools', this.menuPrefix + ' Progress Bar', 'Show'],
+      category: ['UsageMonitor', this.menuPrefix + ' Progress Bar', 'Show'],
       tooltip: 'This apply only on "Disabled" (old) menu',
       type: 'boolean',
       defaultValue: this.defaultShowStatus,
@@ -55,7 +55,7 @@ class CrystoolsProgressBar {
     );
 
     const progressBarElement = document.createElement('div');
-    progressBarElement.classList.add('crystools-monitors-container');
+    progressBarElement.classList.add('usagemonitor-monitors-container');
 
     this.progressBarUI = new ProgressBarUI(
       progressBarElement,
@@ -67,7 +67,7 @@ class CrystoolsProgressBar {
     if (parentElement) {
       parentElement.insertAdjacentElement('afterend', progressBarElement);
     } else {
-      console.error('Crystools: parentElement to move monitors not found!', parentElement);
+      console.error('UsageMonitor: parentElement to move monitors not found!', parentElement);
     }
 
     this.createSettings();
@@ -133,8 +133,8 @@ class CrystoolsProgressBar {
   };
 }
 
-const crystoolsProgressBar = new CrystoolsProgressBar();
+const usagemonitorProgressBar = new UsageMonitorProgressBar();
 app.registerExtension({
-  name: crystoolsProgressBar.idExtensionName,
-  setup: crystoolsProgressBar.setup,
+  name: usagemonitorProgressBar.idExtensionName,
+  setup: usagemonitorProgressBar.setup,
 });

@@ -167,7 +167,7 @@
     },
     {
       "id": 15,
-      "type": "Pipe from any [Crystools]",
+      "type": "Pipe from any [UsageMonitor]",
       "pos": [
         975,
         200
@@ -246,7 +246,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Pipe from any [Crystools]"
+        "Node name for S&R": "Pipe from any [UsageMonitor]"
       }
     },
     {
@@ -370,7 +370,7 @@
     },
     {
       "id": 14,
-      "type": "Pipe to/edit any [Crystools]",
+      "type": "Pipe to/edit any [UsageMonitor]",
       "pos": [
         625,
         200
@@ -431,7 +431,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Pipe to/edit any [Crystools]"
+        "Node name for S&R": "Pipe to/edit any [UsageMonitor]"
       }
     }
   ],

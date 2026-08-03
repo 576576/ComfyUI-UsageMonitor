@@ -13,7 +13,7 @@ export class ProgressBarUI extends ProgressBarUIBase {
     public showSectionFlag: boolean,
     private centerNode: () => void,
   ) {
-    super('crystools-progressBar-root', rootElement);
+    super('usagemonitor-progressBar-root', rootElement);
     this.createDOM();
   }
 
@@ -22,16 +22,16 @@ export class ProgressBarUI extends ProgressBarUIBase {
     this.rootElement.addEventListener('click', this.centerNode);
 
     const progressBar = document.createElement('div');
-    progressBar.classList.add('crystools-progress-bar');
+    progressBar.classList.add('usagemonitor-progress-bar');
     this.rootElement.append(progressBar);
 
     const progressSlider = document.createElement('div');
     this.htmlProgressSliderRef = progressSlider;
-    progressSlider.classList.add('crystools-slider');
+    progressSlider.classList.add('usagemonitor-slider');
     progressBar.append(this.htmlProgressSliderRef);
 
     const progressLabel = document.createElement('div');
-    progressLabel.classList.add('crystools-label');
+    progressLabel.classList.add('usagemonitor-label');
     progressLabel.innerHTML = '0%';
     this.htmlProgressLabelRef = progressLabel;
     progressBar.append(this.htmlProgressLabelRef);

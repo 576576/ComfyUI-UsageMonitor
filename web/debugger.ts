@@ -4,9 +4,9 @@ import { commonPrefix, displayContext } from './common.js';
 
 // "Show any" Node
 app.registerExtension({
-  name: 'Crystools.Debugger.ConsoleAny',
+  name: 'UsageMonitor.Debugger.ConsoleAny',
   beforeRegisterNodeDef(nodeType: ComfyNode, nodeData: TLGraphNode, appFromArg: ComfyApp) {
-    if (nodeData.name === 'Show any [Crystools]') {
+    if (nodeData.name === 'Show any [UsageMonitor]') {
       // 3 is the index of the text field in the node
       displayContext(nodeType, appFromArg, 3);
     }
@@ -14,7 +14,7 @@ app.registerExtension({
 });
 
 app.registerExtension({
-  name: 'Crystools.Debugger.Metadata',
+  name: 'UsageMonitor.Debugger.Metadata',
   registerCustomNodes() {
     class MetadataNode extends TLGraphNode {
       constructor() {
@@ -78,8 +78,8 @@ app.registerExtension({
     }
 
     // I'm not sure for what they're using prototype and lots of black magic, don't change the order!
-    LiteGraph.registerNodeType('Show Metadata [Crystools]', MetadataNode);
-    MetadataNode.category = `crystools ${commonPrefix}/Debugger`;
+    LiteGraph.registerNodeType('Show Metadata [UsageMonitor]', MetadataNode);
+    MetadataNode.category = `usagemonitor ${commonPrefix}/Debugger`;
     MetadataNode.shape = LiteGraph.BOX_SHAPE;
     MetadataNode.title = `${commonPrefix} Show Metadata`;
     // MetadataNode.collapsable = false;

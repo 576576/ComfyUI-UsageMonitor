@@ -260,7 +260,7 @@
     },
     {
       "id": 14,
-      "type": "Preview from image [Crystools]",
+      "type": "Preview from image [UsageMonitor]",
       "pos": [
         1525,
         175
@@ -288,7 +288,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "Preview from image [Crystools]"
+        "Node name for S&R": "Preview from image [UsageMonitor]"
       }
     }
   ],

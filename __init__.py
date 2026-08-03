@@ -1,14 +1,14 @@
 """
 @author: Crystian
-@title: Crystools
-@nickname: Crystools
+@title: UsageMonitor
+@nickname: UsageMonitor
 @version: 1.27.4
-@project: "https://github.com/crystian/comfyui-crystools",
+@project: "https://github.com/crystian/comfyui-usagemonitor",
 @description: Plugins for multiples uses, mainly for debugging, you need them! IG: https://www.instagram.com/crystian.ia
 """
 
 from .core import version, logger
-logger.info(f'Crystools version: {version}')
+logger.info(f'UsageMonitor version: {version}')
 
 from .nodes._names import CLASSES
 from .nodes.primitive import CBoolean, CText, CTextML, CInteger, CFloat

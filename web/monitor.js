@@ -4,13 +4,13 @@ import { MonitorUI } from './monitorUI.js';
 import { Colors } from './styles.js';
 import { convertNumberToPascalCase } from './utils.js';
 import { ComfyKeyMenuDisplayOption, MenuDisplayOptions } from './progressBarUIBase.js';
-class CrystoolsMonitor {
+class UsageMonitorMonitor {
     constructor() {
         Object.defineProperty(this, "idExtensionName", {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: 'Crystools.monitor'
+            value: 'UsageMonitor.monitor'
         });
         Object.defineProperty(this, "menuPrefix", {
             enumerable: true,
@@ -24,7 +24,7 @@ class CrystoolsMonitor {
             writable: true,
             value: MenuDisplayOptions.Disabled
         });
-        Object.defineProperty(this, "crystoolsButtonGroup", {
+        Object.defineProperty(this, "usagemonitorButtonGroup", {
             enumerable: true,
             configurable: true,
             writable: true,
@@ -100,7 +100,7 @@ class CrystoolsMonitor {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: 'Crystools.MonitorWidth'
+            value: 'UsageMonitor.MonitorWidth'
         });
         Object.defineProperty(this, "monitorWidth", {
             enumerable: true,
@@ -112,7 +112,7 @@ class CrystoolsMonitor {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: 'Crystools.MonitorHeight'
+            value: 'UsageMonitor.MonitorHeight'
         });
         Object.defineProperty(this, "monitorHeight", {
             enumerable: true,
@@ -126,9 +126,9 @@ class CrystoolsMonitor {
             writable: true,
             value: () => {
                 this.settingsRate = {
-                    id: 'Crystools.RefreshRate',
+                    id: 'UsageMonitor.RefreshRate',
                     name: 'Refresh per second',
-                    category: ['Crystools', this.menuPrefix + ' Configuration', 'refresh'],
+                    category: ['UsageMonitor', this.menuPrefix + ' Configuration', 'refresh'],
                     tooltip: 'This is the time (in seconds) between each update of the monitors, 0 means no refresh',
                     type: 'slider',
                     attrs: {
@@ -191,7 +191,7 @@ class CrystoolsMonitor {
                 this.settingsMonitorWidth = {
                     id: this.monitorWidthId,
                     name: 'Pixel Width',
-                    category: ['Crystools', this.menuPrefix + ' Configuration', 'width'],
+                    category: ['UsageMonitor', this.menuPrefix + ' Configuration', 'width'],
                     tooltip: 'The width of the monitor in pixels on the UI (only on top/bottom UI)',
                     type: 'slider',
                     attrs: {
@@ -226,7 +226,7 @@ class CrystoolsMonitor {
                 this.settingsMonitorHeight = {
                     id: this.monitorHeightId,
                     name: 'Pixel Height',
-                    category: ['Crystools', this.menuPrefix + ' Configuration', 'height'],
+                    category: ['UsageMonitor', this.menuPrefix + ' Configuration', 'height'],
                     tooltip: 'The height of the monitor in pixels on the UI (only on top/bottom UI)',
                     type: 'slider',
                     attrs: {
@@ -259,9 +259,9 @@ class CrystoolsMonitor {
             writable: true,
             value: () => {
                 this.monitorCPUElement = {
-                    id: 'Crystools.ShowCpu',
+                    id: 'UsageMonitor.ShowCpu',
                     name: 'CPU Usage',
-                    category: ['Crystools', this.menuPrefix + ' Hardware', 'Cpu'],
+                    category: ['UsageMonitor', this.menuPrefix + ' Hardware', 'Cpu'],
                     type: 'boolean',
                     label: 'CPU',
                     symbol: '%',
@@ -283,9 +283,9 @@ class CrystoolsMonitor {
             writable: true,
             value: () => {
                 this.monitorRAMElement = {
-                    id: 'Crystools.ShowRam',
+                    id: 'UsageMonitor.ShowRam',
                     name: 'RAM Used',
-                    category: ['Crystools', this.menuPrefix + ' Hardware', 'Ram'],
+                    category: ['UsageMonitor', this.menuPrefix + ' Hardware', 'Ram'],
                     type: 'boolean',
                     label: 'RAM',
                     symbol: '%',
@@ -313,9 +313,9 @@ class CrystoolsMonitor {
                 let label = 'GPU ';
                 label += moreThanOneGPU ? index : '';
                 const monitorGPUNElement = {
-                    id: 'Crystools.ShowGpuUsage' + convertNumberToPascalCase(index),
+                    id: 'UsageMonitor.ShowGpuUsage' + convertNumberToPascalCase(index),
                     name: ' Usage',
-                    category: ['Crystools', `${this.menuPrefix} Show GPU [${index}] ${name}`, 'Usage'],
+                    category: ['UsageMonitor', `${this.menuPrefix} Show GPU [${index}] ${name}`, 'Usage'],
                     type: 'boolean',
                     label,
                     symbol: '%',
@@ -347,9 +347,9 @@ class CrystoolsMonitor {
                 let label = 'VRAM ';
                 label += moreThanOneGPU ? index : '';
                 const monitorVRAMNElement = {
-                    id: 'Crystools.ShowGpuVram' + convertNumberToPascalCase(index),
+                    id: 'UsageMonitor.ShowGpuVram' + convertNumberToPascalCase(index),
                     name: 'VRAM',
-                    category: ['Crystools', `${this.menuPrefix} Show GPU [${index}] ${name}`, 'VRAM'],
+                    category: ['UsageMonitor', `${this.menuPrefix} Show GPU [${index}] ${name}`, 'VRAM'],
                     type: 'boolean',
                     label: label,
                     symbol: '%',
@@ -381,9 +381,9 @@ class CrystoolsMonitor {
                 let label = 'Temp ';
                 label += moreThanOneGPU ? index : '';
                 const monitorTemperatureNElement = {
-                    id: 'Crystools.ShowGpuTemperature' + convertNumberToPascalCase(index),
+                    id: 'UsageMonitor.ShowGpuTemperature' + convertNumberToPascalCase(index),
                     name: 'Temperature',
-                    category: ['Crystools', `${this.menuPrefix} Show GPU [${index}] ${name}`, 'Temperature'],
+                    category: ['UsageMonitor', `${this.menuPrefix} Show GPU [${index}] ${name}`, 'Temperature'],
                     type: 'boolean',
                     label: label,
                     symbol: '°',
@@ -410,9 +410,9 @@ class CrystoolsMonitor {
             writable: true,
             value: () => {
                 this.monitorHDDElement = {
-                    id: 'Crystools.ShowHdd',
+                    id: 'UsageMonitor.ShowHdd',
                     name: 'Show HDD Used',
-                    category: ['Crystools', this.menuPrefix + ' Show Hard Disk', 'Show'],
+                    category: ['UsageMonitor', this.menuPrefix + ' Show Hard Disk', 'Show'],
                     type: 'boolean',
                     label: 'HDD',
                     symbol: '%',
@@ -427,9 +427,9 @@ class CrystoolsMonitor {
                     },
                 };
                 this.settingsHDD = {
-                    id: 'Crystools.WhichHdd',
+                    id: 'UsageMonitor.WhichHdd',
                     name: 'Partition to show',
-                    category: ['Crystools', this.menuPrefix + ' Show Hard Disk', 'Which'],
+                    category: ['UsageMonitor', this.menuPrefix + ' Show Hard Disk', 'Which'],
                     type: 'combo',
                     defaultValue: '/',
                     options: [],
@@ -502,15 +502,15 @@ class CrystoolsMonitor {
                     case MenuDisplayOptions.Disabled:
                         parentElement = document.getElementById('queue-button');
                         if (parentElement && this.monitorUI.rootElement) {
-                            parentElement.insertAdjacentElement('afterend', this.crystoolsButtonGroup.element);
+                            parentElement.insertAdjacentElement('afterend', this.usagemonitorButtonGroup.element);
                         }
                         else {
-                            console.error('Crystools: parentElement to move monitors not found!', parentElement);
+                            console.error('UsageMonitor: parentElement to move monitors not found!', parentElement);
                         }
                         break;
                     case MenuDisplayOptions.Top:
                     case MenuDisplayOptions.Bottom:
-                        app.menu?.settingsGroup.element.before(this.crystoolsButtonGroup.element);
+                        app.menu?.settingsGroup.element.before(this.usagemonitorButtonGroup.element);
                 }
             }
         });
@@ -549,7 +549,7 @@ class CrystoolsMonitor {
             configurable: true,
             writable: true,
             value: async (data) => {
-                const resp = await api.fetchApi('/crystools/monitor', {
+                const resp = await api.fetchApi('/usagemonitor/monitor', {
                     method: 'PATCH',
                     body: JSON.stringify(data),
                     cache: 'no-store',
@@ -565,7 +565,7 @@ class CrystoolsMonitor {
             configurable: true,
             writable: true,
             value: async (index, data) => {
-                const resp = await api.fetchApi(`/crystools/monitor/GPU/${index}`, {
+                const resp = await api.fetchApi(`/usagemonitor/monitor/GPU/${index}`, {
                     method: 'PATCH',
                     body: JSON.stringify(data),
                     cache: 'no-store',
@@ -597,7 +597,7 @@ class CrystoolsMonitor {
             configurable: true,
             writable: true,
             value: async (what) => {
-                const resp = await api.fetchApi(`/crystools/monitor/${what}`, {
+                const resp = await api.fetchApi(`/usagemonitor/monitor/${what}`, {
                     method: 'GET',
                     cache: 'no-store',
                 });
@@ -627,9 +627,9 @@ class CrystoolsMonitor {
                 app.ui.settings.addEventListener(`${ComfyKeyMenuDisplayOption}.change`, (e) => {
                     this.updateDisplay(e.detail.value);
                 });
-                this.crystoolsButtonGroup = new ComfyButtonGroup();
-                app.menu?.settingsGroup.element.before(this.crystoolsButtonGroup.element);
-                this.monitorUI = new MonitorUI(this.crystoolsButtonGroup.element, this.monitorCPUElement, this.monitorRAMElement, this.monitorHDDElement, this.monitorGPUSettings, this.monitorVRAMSettings, this.monitorTemperatureSettings, currentRate);
+                this.usagemonitorButtonGroup = new ComfyButtonGroup();
+                app.menu?.settingsGroup.element.before(this.usagemonitorButtonGroup.element);
+                this.monitorUI = new MonitorUI(this.usagemonitorButtonGroup.element, this.monitorCPUElement, this.monitorRAMElement, this.monitorHDDElement, this.monitorGPUSettings, this.monitorVRAMSettings, this.monitorTemperatureSettings, currentRate);
                 this.updateDisplay(this.menuDisplayOption);
                 this.registerListeners();
             }
@@ -639,7 +639,7 @@ class CrystoolsMonitor {
             configurable: true,
             writable: true,
             value: () => {
-                api.addEventListener('crystools.monitor', (event) => {
+                api.addEventListener('usagemonitor.monitor', (event) => {
                     if (event?.detail === undefined) {
                         return;
                     }
@@ -649,8 +649,8 @@ class CrystoolsMonitor {
         });
     }
 }
-const crystoolsMonitor = new CrystoolsMonitor();
+const usagemonitorMonitor = new UsageMonitorMonitor();
 app.registerExtension({
-    name: crystoolsMonitor.idExtensionName,
-    setup: crystoolsMonitor.setup,
+    name: usagemonitorMonitor.idExtensionName,
+    setup: usagemonitorMonitor.setup,
 });
