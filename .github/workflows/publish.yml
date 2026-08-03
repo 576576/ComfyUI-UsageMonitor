@@ -1,4 +1,4 @@
-name: Publish to Comfy registry
+name: Release and Pub
 on:
   workflow_dispatch:
   push:
@@ -8,8 +8,8 @@ on:
       - "pyproject.toml"
 
 jobs:
-  publish-node:
-    name: Publish Custom Node to registry
+  release:
+    name: Create GitHub Release
     runs-on: ubuntu-latest
     if: ${{ github.repository_owner == '576576' }}
     permissions:
@@ -22,10 +22,21 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           VERSION=$(grep -m1 '^version = ' pyproject.toml | sed -E 's/.*version = "([^"]+)".*/\1/')
+          gh release delete release-latest --yes --cleanup-tag 2>/dev/null || true
           gh release create release-latest \
             --title "$VERSION" \
-            --generate-notes \
-            --force
+            --generate-notes
+
+  publish-node:
+    name: Publish Custom Node to registry
+    runs-on: ubuntu-latest
+    needs: release
+    if: ${{ github.repository_owner == '576576' }}
+    permissions:
+      contents: write
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
       - name: publish
         uses: Comfy-Org/publish-node-action@main
         with:
