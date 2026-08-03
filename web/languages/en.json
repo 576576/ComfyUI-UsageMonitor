@@ -1,0 +1,22 @@
+{
+  "Refresh per second": "Refresh per second",
+  "Refresh interval desc": "Refresh interval in seconds (0 = no refresh)",
+  "Pixel Width": "Pixel Width",
+  "Monitor width desc": "Monitor width in pixels (top/bottom UI)",
+  "Pixel Height": "Pixel Height",
+  "Monitor height desc": "Monitor height in pixels (top/bottom UI)",
+  "CPU Usage": "CPU Usage",
+  "CPU": "CPU",
+  "RAM Used": "RAM Used",
+  "RAM": "RAM",
+  " Usage": " Usage",
+  "VRAM": "VRAM",
+  "Temperature": "Temperature",
+  "Show HDD Used": "Show HDD Used",
+  "HDD": "HDD",
+  "Partition to show": "Partition to show",
+  "UsageMonitor Configuration": "UsageMonitor Configuration",
+  "Hardware": "Hardware",
+  "Show Hard Disk": "Show Hard Disk",
+  "Max:": "Max:"
+}

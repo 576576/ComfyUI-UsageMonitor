@@ -1,1 +1,1 @@
-export declare const commonPrefix = "\uD83E\uDE9B";
+export declare const commonPrefix = "UsageMonitor";

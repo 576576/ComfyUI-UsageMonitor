@@ -23,6 +23,8 @@ export interface ComfyApp {
 	async graphToPrompt(graph?: TLGraph, clean?: boolean): Promise<void>;
 	// workflow: ComfyWorkflowInstance ???
 	async loadGraphData(graphData: {}, clean?: boolean, restore_view?: boolean, workflow?: any|null): Promise<void>
+	async loadTranslations(): Promise<void>;
+	translate(text: string, vars?: Record<string, string>): string;
 	ui: {
 		settings: {
 			addSetting(config: {id: string, name: string, type: () => HTMLElement}) : void;

@@ -1,3 +1,4 @@
+import { app } from './comfy/index.js';
 import { ProgressBarUIBase } from './progressBarUIBase.js';
 import { createStyleSheet, formatBytes } from './utils.js';
 export class MonitorUI extends ProgressBarUIBase {
@@ -187,7 +188,7 @@ export class MonitorUI extends ProgressBarUIBase {
                     const newMax = used > validMax ? used : validMax;
                     this.maxVRAMUsed[gpuIndex] = newMax;
                     postfix = ` - ${formatBytes(used)} / ${formatBytes(total)}`;
-                    postfix += ` Max: ${formatBytes(newMax)}`;
+                    postfix += ` ${app.translate('Max:')} ${formatBytes(newMax)}`;
                 }
                 title = `${prefix}${title}${postfix}`;
                 if (monitorSettings.htmlMonitorRef) {

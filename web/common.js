@@ -1,1 +1,1 @@
-export const commonPrefix = '🪛';
+export const commonPrefix = 'UsageMonitor';

@@ -1,3 +1,4 @@
+import { app } from './comfy/index.js';
 import { ProgressBarUIBase } from './progressBarUIBase.js';
 import { createStyleSheet, formatBytes } from './utils.js';
 
@@ -151,7 +152,7 @@ export class MonitorUI extends ProgressBarUIBase {
 
       postfix = ` - ${formatBytes(used)} / ${formatBytes(total)}`;
       // Add max VRAM to tooltip
-      postfix += ` Max: ${formatBytes(newMax)}`;
+      postfix += ` ${app.translate('Max:')} ${formatBytes(newMax)}`;
     }
 
     title = `${prefix}${title}${postfix}`;
