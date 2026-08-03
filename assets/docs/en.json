@@ -21,7 +21,7 @@
 
   "_comment_block1": "── Descriptions ──",
   "descriptions": {
-    "tagline": "🪛 A real-time resource monitor for ComfyUI 🪛",
+    "tagline": "A real-time resource monitor for ComfyUI",
     "desc1": "Watch your system resources (CPU, GPU, RAM, VRAM, GPU temperature and disk space) directly on the ComfyUI menu in real-time, so you can identify bottlenecks in your workflow and know when it is time to restart the server, unload models or close some tabs.",
     "monitorIntro": "**🎉 Finally, you can see the resources used by ComfyUI (CPU, GPU, RAM, VRAM, GPU Temp and space) on the menu in real-time!**",
     "horizontal": "Horizontal:",
@@ -29,7 +29,7 @@
     "monitorConfig": "Now you can identify the bottlenecks in your workflow and know when it's time to restart the server, unload models or even close some tabs! You can configure the refresh rate and which resources to show:",
     "notesTitle": "Notes",
     "installIntro": "1. Install [ComfyUI](https://github.com/comfyanonymous/ComfyUI).\n2. Clone this repo into `custom_nodes` (see below).\n3. Start up ComfyUI.",
-    "amdNote": "> **For AMD users (ROCm):** GPU monitoring works out of the box on this branch (uses `amdsmi`) — install normally as described above. The legacy `AMD` branch is still available for reference.",
+    "amdNote": "> **For AMD users (ROCm):** GPU monitoring works out of the box on this branch (uses `amdsmi`) — install normally as described above.",
     "managerDesc": "Search for `usagemonitor` in the [manager](https://github.com/ltdrdata/ComfyUI-Manager.git) and install it.",
     "ack": "This project is a renamed continuation of the original [**ComfyUI-Crystools**](https://github.com/crystian/ComfyUI-Crystools) created by [Crystian](https://github.com/crystian).  \nAll credit for the original work goes to the original author."
   },

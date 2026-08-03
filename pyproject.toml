@@ -1,13 +1,12 @@
 [project]
 name = "ComfyUI-UsageMonitor"
-description = "With this suit, you can see the resources monitor, progress bar & time elapsed, metadata and compare between two images, compare between two JSONs, show any value to console/display, pipes, and more!\nThis provides better nodes to load/save images, previews, etc, and see \"hidden\" data without loading a new workflow."
-version = "1.27.4"
+description = "With this suit, you can see the resources monitor."
+version = "1.30.0"
 license = { file = "LICENSE" }
 dependencies = ["torch", "nvidia-ml-py", "amdsmi", "py-cpuinfo", "psutil"]
 
 classifiers = [
   "Operating System :: OS Independent",
-  "Environment :: GPU :: NVIDIA CUDA",
   "Environment :: GPU",
 ]
 
@@ -17,6 +16,6 @@ Documentation = "https://github.com/576576/ComfyUI-UsageMonitor/blob/main/README
 "Bug Tracker" = "https://github.com/576576/ComfyUI-UsageMonitor/issues"
 
 [tool.comfy]
-PublisherId = "576576"
+PublisherId = "o576o"
 DisplayName = "ComfyUI-UsageMonitor"
-Icon = "https://raw.githubusercontent.com/576576/ComfyUI-UsageMonitor/main/assets/images/screwdriver.png"
+Icon = "https://raw.githubusercontent.com/576576/ComfyUI-UsageMonitor/main/assets/images/icon.png"
