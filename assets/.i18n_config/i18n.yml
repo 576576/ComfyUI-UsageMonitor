@@ -1,0 +1,12 @@
+# Repository i18n & docs configuration
+root_lang: zh
+
+# Fallback tree — overrides the default variant→base→en fallback.
+# Empty by default so the default behavior applies; uncomment entries to enable.
+# The tree is recursive: after a locale's own chain is exhausted, each hop
+# contributes its own chain (e.g. `zh-Hant: [zh]` continues into zh's tree
+# when zh misses a key).
+fallback:
+  # zh-Hant: [zh, en]
+  # zh: [en]
+  # en: []

@@ -6,7 +6,7 @@
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
-      <env name="CRYSTOOLS_LOGLEVEL" value="10" />
+      <env name="USAGEMONITOR_LOGLEVEL" value="10" />
     </envs>
     <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="X:\comfy\ComfyUI" />

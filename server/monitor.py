@@ -3,7 +3,7 @@ from aiohttp import web
 from ..core import logger
 from ..general import cmonitor
 
-@PromptServer.instance.routes.patch("/crystools/monitor")
+@PromptServer.instance.routes.patch("/usagemonitor/monitor")
 async def newSettings(request):
     try:
         settings = await request.json()
@@ -56,7 +56,7 @@ async def newSettings(request):
         return web.Response(status=400, text=str(e))
 
 
-@PromptServer.instance.routes.post("/crystools/monitor/switch")
+@PromptServer.instance.routes.post("/usagemonitor/monitor/switch")
 async def monitorSwitch(request):
     try:
         switch = await request.json()
@@ -77,7 +77,7 @@ async def monitorSwitch(request):
         return web.Response(status=400, text=str(e))
 
 
-@PromptServer.instance.routes.get("/crystools/monitor/HDD")
+@PromptServer.instance.routes.get("/usagemonitor/monitor/HDD")
 def getHDDs(request):
     try:
         return web.json_response(cmonitor.hardwareInfo.getHDDsInfo())
@@ -86,7 +86,7 @@ def getHDDs(request):
         return web.Response(status=400, text=str(e))
 
 
-@PromptServer.instance.routes.get("/crystools/monitor/GPU")
+@PromptServer.instance.routes.get("/usagemonitor/monitor/GPU")
 def getGPUs(request):
     try:
         gpuInfo = cmonitor.hardwareInfo.getGPUInfo()
@@ -96,7 +96,7 @@ def getGPUs(request):
         return web.Response(status=400, text=str(e))
 
 
-@PromptServer.instance.routes.patch("/crystools/monitor/GPU/{index}")
+@PromptServer.instance.routes.patch("/usagemonitor/monitor/GPU/{index}")
 async def getGPUs(request):
   try:
     index = request.match_info["index"]

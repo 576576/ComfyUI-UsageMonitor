@@ -1,0 +1,63 @@
+{
+  "_comment_meta": "── 元信息 ──",
+  "lang": "中文",
+  "langCode": "zh",
+  "langRegion": "简体",
+  "langRegionCode": ["Hans", "CN", "SG"],
+  "platforms": ["Windows", "Linux"],
+  "license": "MIT",
+  "title": "ComfyUI-UsageMonitor",
+
+  "_comment_headings": "── 章节标题 ──",
+  "headings": {
+    "monitor": "资源监控",
+    "features": "功能特性",
+    "install": "安装",
+    "manager": "从管理器安装",
+    "arch": "项目结构",
+    "ack": "致谢",
+    "license": "许可证"
+  },
+
+  "_comment_block1": "── 描述 ──",
+  "descriptions": {
+    "tagline": "🪛 ComfyUI 实时资源监控 🪛",
+    "desc1": "直接在 ComfyUI 菜单上实时查看系统资源（CPU、GPU、内存、显存、GPU 温度和磁盘空间），帮助您识别工作流中的瓶颈，并知道何时该重启服务器、卸载模型或关闭一些标签页。",
+    "monitorIntro": "**🎉 现在您终于可以在菜单上实时查看 ComfyUI 使用的资源（CPU、GPU、内存、显存、GPU 温度和磁盘空间）了！**",
+    "horizontal": "横向：",
+    "vertical": "纵向：",
+    "monitorConfig": "现在您可以识别工作流中的瓶颈，知道何时该重启服务器、卸载模型甚至关闭一些标签页！您还可以配置刷新频率以及要显示哪些资源：",
+    "notesTitle": "注意事项",
+    "installIntro": "1. 安装 [ComfyUI](https://github.com/comfyanonymous/ComfyUI)。\n2. 将此仓库克隆到 `custom_nodes`（见下文）。\n3. 启动 ComfyUI。",
+    "amdNote": "> **AMD 用户（ROCm）：** 本分支开箱即用地支持 AMD GPU 监控（使用 `amdsmi`）——按上述说明正常安装即可。旧版 `AMD` 分支仍可供参考。",
+    "managerDesc": "在[管理器](https://github.com/ltdrdata/ComfyUI-Manager.git)中搜索 `usagemonitor` 并安装。",
+    "ack": "本项目是原版 [**ComfyUI-Crystools**](https://github.com/crystian/ComfyUI-Crystools)（由 [Crystian](https://github.com/crystian) 创建）的更名延续。  \n原作品的功劳归于原作者。"
+  },
+
+  "_comment_notes": "── 注意事项 ──",
+  "notes": {
+    "note1": "使用 CUDA（NVIDIA）或 ROCm（AMD）时即可获取 GPU 数据。",
+    "note2": "本扩展需要 ComfyUI 1915（或更高版本）。",
+    "note3": "监控开销很低（占用 0.1% 到 0.5%），您可以在设置中将其禁用（将 `刷新频率` 设为 `0`）。",
+    "note4": "数据来自以下库：[psutil](https://pypi.org/project/psutil/)、[torch](https://pytorch.org/)、[nvidia-ml-py](https://pypi.org/project/nvidia-ml-py/)（NVIDIA 官方库）和 [amdsmi](https://pypi.org/project/amdsmi/)（AMD 官方库）。"
+  },
+
+  "_comment_features": "── 功能特性 ──",
+  "features": {
+    "title": ["功能", "描述"],
+    "feat1": ["实时监控", "在 ComfyUI 菜单上实时显示 CPU、GPU、内存、显存、GPU 温度和磁盘空间"],
+    "feat2": ["支持 NVIDIA 与 AMD", "通过 `nvidia-ml-py` 支持 CUDA，通过 `amdsmi` 支持 ROCm"],
+    "feat3": ["横向与纵向布局", "选择适合您工作流的监控布局"],
+    "feat4": ["完全可配置", "刷新频率和显示的资源均可在设置菜单中配置"]
+  },
+
+  "_comment_arch": "── 架构 ──",
+  "archTree": {
+    "title": "ComfyUI-UsageMonitor",
+    "dir1": ["general", "硬件信息（CPU / GPU / HDD）"],
+    "dir2": ["server", "监控 API 路由"],
+    "dir3": ["web", "前端监控界面"],
+    "dir4": ["core", "配置与日志"],
+    "dir5": ["assets", "图片与 i18n 文档"]
+  }
+}

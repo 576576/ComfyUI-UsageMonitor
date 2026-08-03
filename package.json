@@ -1,20 +1,23 @@
 {
-  "name": "crystools-typescript",
+  "name": "usagemonitor-typescript",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "tsc --watch",
-    "tsc": "tsc",
-    "lint": "eslint web --ext ts --report-unused-disable-directives --max-warnings 0",
-    "lint-fix": "eslint web --ext ts --fix",
+    "start": "tsgo --watch",
+    "tsc": "tsgo",
+    "lint": "eslint web --report-unused-disable-directives --max-warnings 0",
+    "lint-fix": "eslint web --fix",
     "validate": "npm run tsc && npm run lint"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "6.18.1",
-    "@typescript-eslint/parser": "6.18.1",
-    "eslint": "8.56.0",
-    "eslint-plugin-import": "2.29.1",
-    "typescript": "5.3.3"
+    "@eslint/js": "^9.39.5",
+    "@typescript-eslint/eslint-plugin": "8.65.0",
+    "@typescript-eslint/parser": "8.65.0",
+    "@typescript/native-preview": "^7.0.0-dev.20260707.2",
+    "eslint": "9.39.5",
+    "eslint-plugin-import": "2.32.0",
+    "globals": "^17.9.0",
+    "typescript": "^6.0.3"
   }
 }

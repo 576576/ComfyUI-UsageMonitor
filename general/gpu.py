@@ -35,6 +35,7 @@ class CGPUInfo:
     """
     cuda = False
     pynvmlLoaded = False
+    amdsmiLoaded = False
     jtopLoaded = False
     cudaAvailable = False
     torchDevice = 'cpu'
@@ -62,29 +63,43 @@ class CGPUInfo:
             except Exception as e:
                 logger.error('Could not initialize jtop. ' + str(e))
         else:
-            # Try to import pynvml for non-Jetson devices
+            # Try to import NVIDIA (nvidia-ml-py, module name pynvml) for non-Jetson devices
             try:
                 import pynvml
                 self.pynvml = pynvml
                 self.pynvml.nvmlInit()
                 self.pynvmlLoaded = True
-                logger.info('pynvml (NVIDIA) initialized.')
+                logger.info('nvidia-ml-py (pynvml, NVIDIA) initialized.')
             except ImportError as e:
-                logger.error('pynvml is not installed. ' + str(e))
+                logger.warning('nvidia-ml-py (pynvml) is not installed. ' + str(e))
             except Exception as e:
-                logger.error('Could not init pynvml (NVIDIA). ' + str(e))
+                logger.warning('Could not init nvidia-ml-py (pynvml, NVIDIA). ' + str(e))
 
-        self.anygpuLoaded = self.pynvmlLoaded or self.jtopLoaded
+            # Try to import amdsmi for AMD devices (only if NVIDIA failed)
+            if not self.pynvmlLoaded:
+                try:
+                    import amdsmi
+                    amdsmi.amdsmi_init()
+                    self.amdsmi = amdsmi
+                    self.amdsmiLoaded = True
+                    logger.info('amdsmi (AMD) initialized.')
+                except ImportError as e:
+                    logger.error('amdsmi is not installed. ' + str(e))
+                except Exception as e:
+                    logger.error('Could not init amdsmi (AMD). ' + str(e))
+
+        self.anygpuLoaded = self.pynvmlLoaded or self.amdsmiLoaded or self.jtopLoaded
 
         try:
             self.torchDevice = comfy.model_management.get_torch_device_name(comfy.model_management.get_torch_device())
         except Exception as e:
             logger.error('Could not pick default device. ' + str(e))
 
-        if self.pynvmlLoaded and not self.jtopLoaded and not self.deviceGetCount():
+        if not self.jtopLoaded and not self.deviceGetCount():
             logger.warning('No GPU detected, disabling GPU monitoring.')
             self.anygpuLoaded = False
             self.pynvmlLoaded = False
+            self.amdsmiLoaded = False
             self.jtopLoaded = False
 
         if self.anygpuLoaded:
@@ -205,6 +220,8 @@ class CGPUInfo:
     def deviceGetCount(self):
         if self.pynvmlLoaded:
             return self.pynvml.nvmlDeviceGetCount()
+        elif self.amdsmiLoaded:
+            return len(self.amdsmi.amdsmi_get_processor_handles())
         elif self.jtopLoaded:
             # For Jetson devices, we assume there's one GPU
             return 1
@@ -214,6 +231,8 @@ class CGPUInfo:
     def deviceGetHandleByIndex(self, index):
         if self.pynvmlLoaded:
             return self.pynvml.nvmlDeviceGetHandleByIndex(index)
+        elif self.amdsmiLoaded:
+            return self.amdsmi.amdsmi_get_processor_handles()[index]
         elif self.jtopLoaded:
             return index  # On Jetson, index acts as handle
         else:
@@ -235,6 +254,16 @@ class CGPUInfo:
                 logger.error(f"UnicodeDecodeError: {e}")
 
             return gpuName
+        elif self.amdsmiLoaded:
+            try:
+                board_info = self.amdsmi.amdsmi_get_gpu_board_info(deviceHandle)
+                gpuName = board_info.get('product_name', '') or 'Unknown GPU'
+                if not gpuName or gpuName.startswith('0x'):
+                    gpuName = 'Unknown GPU'
+                return gpuName
+            except Exception as e:
+                logger.error('Could not get GPU name. ' + str(e))
+                return 'Unknown GPU'
         elif self.jtopLoaded:
             # Access the GPU name from self.jtopInstance.gpu
             try:
@@ -250,6 +279,16 @@ class CGPUInfo:
     def systemGetDriverVersion(self):
         if self.pynvmlLoaded:
             return f'NVIDIA Driver: {self.pynvml.nvmlSystemGetDriverVersion()}'
+        elif self.amdsmiLoaded:
+            try:
+                handles = self.amdsmi.amdsmi_get_processor_handles()
+                if handles:
+                    driver_info = self.amdsmi.amdsmi_get_gpu_driver_info(handles[0])
+                    return f'AMD Driver: {driver_info.get("driver_version", "unknown")}'
+                return 'AMD Driver: unknown'
+            except Exception as e:
+                logger.error('Could not get AMD driver version. ' + str(e))
+                return 'AMD Driver: unknown'
         elif self.jtopLoaded:
             # No direct method to get driver version from jtop
             return 'NVIDIA Driver: unknown'
@@ -259,6 +298,16 @@ class CGPUInfo:
     def deviceGetUtilizationRates(self, deviceHandle):
         if self.pynvmlLoaded:
             return self.pynvml.nvmlDeviceGetUtilizationRates(deviceHandle).gpu
+        elif self.amdsmiLoaded:
+            try:
+                activity = self.amdsmi.amdsmi_get_gpu_activity(deviceHandle)
+                gpu_util = activity.get('gfx_activity', -1)
+                if gpu_util == 'N/A' or gpu_util is None:
+                    return -1
+                return gpu_util
+            except Exception as e:
+                logger.error('Could not get GPU utilization. ' + str(e))
+                return -1
         elif self.jtopLoaded:
             # GPU utilization from jtop stats
             try:
@@ -274,6 +323,17 @@ class CGPUInfo:
         if self.pynvmlLoaded:
             mem = self.pynvml.nvmlDeviceGetMemoryInfo(deviceHandle)
             return {'total': mem.total, 'used': mem.used}
+        elif self.amdsmiLoaded:
+            try:
+                vram = self.amdsmi.amdsmi_get_gpu_vram_usage(deviceHandle)
+                # amdsmi returns values in MiB; convert to bytes to match pynvml
+                return {
+                    'total': vram.get('vram_total', 0) * 1024 * 1024,
+                    'used': vram.get('vram_used', 0) * 1024 * 1024,
+                }
+            except Exception as e:
+                logger.error('Could not get GPU memory info. ' + str(e))
+                return {'total': 0, 'used': 0}
         elif self.jtopLoaded:
             mem_data = self.jtopInstance.memory['RAM']
             total = mem_data['tot']
@@ -285,6 +345,21 @@ class CGPUInfo:
     def deviceGetTemperature(self, deviceHandle):
         if self.pynvmlLoaded:
             return self.pynvml.nvmlDeviceGetTemperature(deviceHandle, self.pynvml.NVML_TEMPERATURE_GPU)
+        elif self.amdsmiLoaded:
+            try:
+                temp = self.amdsmi.amdsmi_get_temp_metric(
+                    deviceHandle,
+                    self.amdsmi.AmdSmiTemperatureType.EDGE,
+                    self.amdsmi.AmdSmiTemperatureMetric.CURRENT,
+                )
+                # amdsmi docs report millidegrees; some builds already return Celsius.
+                # Normalize to degrees Celsius.
+                if temp > 1000:
+                    temp = temp / 1000.0
+                return round(temp)
+            except Exception as e:
+                logger.error('Could not get GPU temperature. ' + str(e))
+                return -1
         elif self.jtopLoaded:
             try:
                 temperature = self.jtopInstance.stats.get('Temp gpu', -1)
@@ -296,5 +371,10 @@ class CGPUInfo:
             return 0
 
     def close(self):
+        if self.amdsmiLoaded:
+            try:
+                self.amdsmi.amdsmi_shut_down()
+            except Exception as e:
+                logger.error('Could not shut down amdsmi (AMD). ' + str(e))
         if self.jtopLoaded and self.jtopInstance is not None:
             self.jtopInstance.close()

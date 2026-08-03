@@ -24,7 +24,7 @@ class CMonitor:
     async def send_message(self, data) -> None:
       # I'm not sure if it is ok, but works ¯\_(ツ)_/¯
       # I tried to use async with send_json, but eventually that don't send the message
-      server.PromptServer.instance.send_sync('crystools.monitor', data)
+      server.PromptServer.instance.send_sync('usagemonitor.monitor', data)
 
     def startMonitorLoop(self):
       # logger.debug('Starting monitor loop...')

@@ -1,9 +1,5 @@
 import { utils } from './comfy/index.js';
-utils.addStylesheet('extensions/ComfyUI-Crystools/monitor.css');
-export var Styles;
-(function (Styles) {
-    Styles["BARS"] = "BARS";
-})(Styles || (Styles = {}));
+utils.addStylesheet('extensions/ComfyUI-UsageMonitor/monitor.css');
 export var Colors;
 (function (Colors) {
     Colors["CPU"] = "#0AA015";

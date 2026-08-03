@@ -124,7 +124,7 @@ export interface IWidget<TValue = any, TOptions = any> {
     marker?: boolean;
     disabled?: boolean;
     callback?: WidgetCallback<this>;
-    // crystools
+    // usagemonitor
     onRemove?: () => void;
     /** Called by `LGraphCanvas.drawNodeWidgets` */
     draw?(

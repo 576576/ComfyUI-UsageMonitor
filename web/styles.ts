@@ -1,10 +1,6 @@
 import { utils } from './comfy/index.js';
 
-utils.addStylesheet('extensions/ComfyUI-Crystools/monitor.css');
-
-export enum Styles {
-  'BARS' = 'BARS'
-}
+utils.addStylesheet('extensions/ComfyUI-UsageMonitor/monitor.css');
 
 export enum Colors {
   'CPU' = '#0AA015',

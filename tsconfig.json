@@ -6,8 +6,6 @@
     "typeRoots": [
       // "./web/ts/typings",
     ],
-//     "rootDir": "../",
-    "baseUrl": "../../web",
 //    "baseUrl": "./",
     "paths": {
 //      "/scripts/*": ["../../web/scripts/*"], // works
@@ -47,7 +45,6 @@
     "noUncheckedIndexedAccess": true,
     "noPropertyAccessFromIndexSignature": true,
     "allowUnusedLabels": true,
-    "allowSyntheticDefaultImports": false,
     "useDefineForClassFields": true,
     "allowImportingTsExtensions": false,
     "isolatedModules": true,
@@ -55,7 +52,7 @@
     "noEmit": false
   },
   "include": [
-//    "./custom_nodes/comfyui-crystools/web/*.ts",
+//    "./custom_nodes/ComfyUI-UsageMonitor/web/*.ts",
 //    "../../../web/*.ts",
 //    "../../web/*.ts",
     "web/*.ts",
