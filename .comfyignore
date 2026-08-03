@@ -1,0 +1,8 @@
+# Development-only assets
+docs/
+assets/.i18n_config/
+assets/templates/
+assets/docs/
+tests/
+*.psd
+.vscode/

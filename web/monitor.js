@@ -129,7 +129,7 @@ class UsageMonitorMonitor {
                     id: 'UsageMonitor.RefreshRate',
                     name: 'Refresh per second',
                     category: ['UsageMonitor', this.menuPrefix + ' Configuration', 'refresh'],
-                    tooltip: 'This is the time (in seconds) between each update of the monitors, 0 means no refresh',
+                    tooltip: 'Refresh interval desc',
                     type: 'slider',
                     attrs: {
                         min: 0,
@@ -192,7 +192,7 @@ class UsageMonitorMonitor {
                     id: this.monitorWidthId,
                     name: 'Pixel Width',
                     category: ['UsageMonitor', this.menuPrefix + ' Configuration', 'width'],
-                    tooltip: 'The width of the monitor in pixels on the UI (only on top/bottom UI)',
+                    tooltip: 'Monitor width desc',
                     type: 'slider',
                     attrs: {
                         min: 60,
@@ -227,7 +227,7 @@ class UsageMonitorMonitor {
                     id: this.monitorHeightId,
                     name: 'Pixel Height',
                     category: ['UsageMonitor', this.menuPrefix + ' Configuration', 'height'],
-                    tooltip: 'The height of the monitor in pixels on the UI (only on top/bottom UI)',
+                    tooltip: 'Monitor height desc',
                     type: 'slider',
                     attrs: {
                         min: 16,
@@ -261,7 +261,7 @@ class UsageMonitorMonitor {
                 this.monitorCPUElement = {
                     id: 'UsageMonitor.ShowCpu',
                     name: 'CPU Usage',
-                    category: ['UsageMonitor', this.menuPrefix + ' Hardware', 'Cpu'],
+                    category: ['UsageMonitor', 'Hardware', 'Cpu'],
                     type: 'boolean',
                     label: 'CPU',
                     symbol: '%',
@@ -285,7 +285,7 @@ class UsageMonitorMonitor {
                 this.monitorRAMElement = {
                     id: 'UsageMonitor.ShowRam',
                     name: 'RAM Used',
-                    category: ['UsageMonitor', this.menuPrefix + ' Hardware', 'Ram'],
+                    category: ['UsageMonitor', 'Hardware', 'Ram'],
                     type: 'boolean',
                     label: 'RAM',
                     symbol: '%',
@@ -412,7 +412,7 @@ class UsageMonitorMonitor {
                 this.monitorHDDElement = {
                     id: 'UsageMonitor.ShowHdd',
                     name: 'Show HDD Used',
-                    category: ['UsageMonitor', this.menuPrefix + ' Show Hard Disk', 'Show'],
+                    category: ['UsageMonitor', 'Show Hard Disk', 'Show'],
                     type: 'boolean',
                     label: 'HDD',
                     symbol: '%',
@@ -429,7 +429,7 @@ class UsageMonitorMonitor {
                 this.settingsHDD = {
                     id: 'UsageMonitor.WhichHdd',
                     name: 'Partition to show',
-                    category: ['UsageMonitor', this.menuPrefix + ' Show Hard Disk', 'Which'],
+                    category: ['UsageMonitor', 'Show Hard Disk', 'Which'],
                     type: 'combo',
                     defaultValue: '/',
                     options: [],
@@ -611,9 +611,15 @@ class UsageMonitorMonitor {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: () => {
+            value: async () => {
                 if (this.monitorUI) {
                     return;
+                }
+                try {
+                    await app.loadTranslations();
+                }
+                catch (error) {
+                    console.error('UsageMonitor: failed to load translations', error);
                 }
                 this.createSettingsRate();
                 this.createSettingsMonitorHeight();
