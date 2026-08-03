@@ -2,7 +2,7 @@
 
 **_🪛 A powerful set of tools for your belt when you work with ComfyUI 🪛_**
 
-With this suit, you can see the resources monitor, progress bar & time elapsed, metadata and compare between two images, compare between two JSONs, show any value to console/display, pipes, and more!
+With this suit, you can see the progress bar & time elapsed, metadata and compare between two images, compare between two JSONs, show any value to console/display, pipes, and more!
 This provides better nodes to load/save images, previews, etc, and see "hidden" data without loading a new workflow.
 
 ![Show metadata](./docs/jake.gif)
@@ -22,33 +22,6 @@ This provides better nodes to load/save images, previews, etc, and see "hidden" 
 ---
 
 ## General
-
-### Resources monitor
-
-**🎉Finally, you can see the resources used by ComfyUI (CPU, GPU, RAM, VRAM, GPU Temp and space) on the menu in real-time!**
-
-Horizontal:  
-![Monitors](./docs/monitor1.webp)
-
-Vertical:  
-![Monitors](./docs/monitor3.webp)
-
-Now you can identify the bottlenecks in your workflow and know when it's time to restart the server, unload models or even close some tabs!
-
-You can configure the refresh rate which resources to show:
-
-![Monitors](./docs/monitor-settings.png)
-
-> **Notes:**
-> - The GPU data is available when you use CUDA (NVIDIA) or ROCm (AMD).
-> - This extension needs ComfyUI 1915 (or higher).
-> - The cost of the monitor is low (0.1 to 0.5% of utilization), you can disable it from settings (`Refres rate` to `0`).
-> - Data comes from these libraries:
->   - [psutil](https://pypi.org/project/psutil/)
->   - [torch](https://pytorch.org/)
->   - [nvidia-ml-py](https://pypi.org/project/nvidia-ml-py/) (official NVIDIA library)
->   - [amdsmi](https://pypi.org/project/amdsmi/) (official AMD library)
-
 
 ### Progress bar
 

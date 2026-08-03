@@ -22,8 +22,6 @@ from .nodes.pipe import CPipeToAny, CPipeFromAny
 from .nodes.utils import CUtilsCompareJsons, CUtilsStatSystem
 from .nodes.metadata import CMetadataExtractor, CMetadataCompare
 from .nodes.parameters import CJsonFile, CJsonExtractor
-from .server import *
-from .general import *
 
 NODE_CLASS_MAPPINGS = {
     CLASSES.CBOOLEAN_NAME.value: CBoolean,
