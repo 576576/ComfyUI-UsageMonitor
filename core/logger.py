@@ -2,7 +2,6 @@
 import sys
 import copy
 import logging
-from .keys import TEXTS
 from .config import CONFIG
 
 
@@ -25,7 +24,7 @@ class ColoredFormatter(logging.Formatter):
 
 
 # Create a new logger
-logger = logging.getLogger(TEXTS.LOGGER_PREFIX.value)
+logger = logging.getLogger("UsageMonitor")
 logger.propagate = False
 
 # Add handler if we don't have one.

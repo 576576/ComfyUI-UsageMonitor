@@ -1,6 +1,3 @@
-export declare enum Styles {
-    'BARS' = "BARS"
-}
 export declare enum Colors {
     'CPU' = "#0AA015",
     'RAM' = "#07630D",
