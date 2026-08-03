@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "pyproject.toml"
+      - "version"
 
 jobs:
   release:
@@ -21,7 +22,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          VERSION=$(grep -m1 '^version = ' pyproject.toml | sed -E 's/.*version = "([^"]+)".*/\1/')
+          VERSION=$(tr -d '[:space:]' < version)
           gh release delete release-latest --yes --cleanup-tag 2>/dev/null || true
           gh release create release-latest \
             --title "$VERSION" \

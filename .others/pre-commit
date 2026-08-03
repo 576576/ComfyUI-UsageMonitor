@@ -1,33 +1,80 @@
 #!/bin/bash
-# REMEMBER TO COPY THIS FILE INTO .git/hooks/pre-commit
+# Pre-commit hook for ComfyUI-UsageMonitor.
+# Install it with:
+#   cp .others/pre-commit .git/hooks/pre-commit
+# This hook:
+#   1. (optional) validates the web build when web/package.json exists
+#   2. syncs the version from the `version` file (via .others/version.py)
+#   3. regenerates the multi-language READMEs (via .others/render_i18n.py --once)
+#   4. stages all files that may have been touched
 
-cd ../comfy/ComfyUI
-rm ./custom_nodes/ComfyUI-UsageMonitor/web/*.js -f
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT" || { echo "Failed to cd to repo root"; exit 1; }
 
-LOCAL_COMMAND="npm --prefix ./custom_nodes/ComfyUI-UsageMonitor run validate"
-OUTPUT=$($LOCAL_COMMAND 2>&1)
-EXIT_CODE=$?
-
-if [ $EXIT_CODE -eq 0 ]; then
-    echo "Validate ok"
-    cd ../../ComfyUI-UsageMonitor
+# Resolve a Python interpreter (the scripts only use the standard library).
+PYTHON=""
+if command -v python >/dev/null 2>&1; then
+    PYTHON="python"
+elif command -v python3 >/dev/null 2>&1; then
+    PYTHON="python3"
+elif command -v py >/dev/null 2>&1; then
+    PYTHON="py"
 else
-    echo "Validate KO!"
-    echo $OUTPUT
+    # Fall back to common Windows install locations.
+    for p in "$LOCALAPPDATA/Programs/Python"/Python*/python.exe \
+             "$USERPROFILE/miniconda3/python.exe" \
+             "$USERPROFILE/Anaconda3/python.exe" \
+             /c/Python*/python.exe; do
+        if [ -f "$p" ]; then
+            PYTHON="$(cygpath -m "$p" 2>/dev/null || echo "$p")"
+            break
+        fi
+    done
+fi
+
+if [ -z "$PYTHON" ]; then
+    echo "Python not found. Install Python or add it to PATH." >&2
     exit 1
 fi
 
-LOCAL_COMMAND="python .others/version.py"
+# 1) (Optional) Validate the web build.
+if [ -f web/package.json ]; then
+    LOCAL_COMMAND="npm run validate"
+    OUTPUT=$($LOCAL_COMMAND 2>&1)
+    EXIT_CODE=$?
+    if [ $EXIT_CODE -eq 0 ]; then
+        echo "Validate ok"
+    else
+        echo "Validate KO!"
+        echo "$OUTPUT"
+        exit 1
+    fi
+else
+    echo "No web/package.json, skipping web validation"
+fi
 
-OUTPUT=$($LOCAL_COMMAND 2>&1)
+# 2) Sync the version from the `version` file.
+OUTPUT=$("$PYTHON" .others/version.py 2>&1)
 EXIT_CODE=$?
-
 if [ $EXIT_CODE -eq 0 ]; then
     echo "Version changed"
 else
-    echo "Can't change the version! check the .other/version.py"
-    echo $OUTPUT
+    echo "Can't change the version! check the .others/version.py"
+    echo "$OUTPUT"
     exit 1
 fi
 
-git add version pyproject.toml __init__.py core/version.py web/*.js
+# 3) Regenerate the multi-language READMEs.
+OUTPUT=$("$PYTHON" .others/render_i18n.py --once 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ]; then
+    echo "i18n docs rendered"
+else
+    echo "Can't render i18n docs! check the .others/render_i18n.py"
+    echo "$OUTPUT"
+    exit 1
+fi
+
+# 4) Stage every file the hook may have touched.
+git add version pyproject.toml __init__.py core/version.py
+git add README.md docs/en/README.md docs/zh/README.md docs/zh-Hant/README.md

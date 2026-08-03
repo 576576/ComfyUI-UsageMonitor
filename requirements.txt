@@ -1,6 +1,6 @@
 torch
 nvidia-ml-py; platform_machine != 'aarch64'
-amdsmi; platform_machine != 'aarch64'
+adlxpybind; sys_platform == 'win32'
 py-cpuinfo
 psutil
 jetson-stats; platform_machine == 'aarch64'

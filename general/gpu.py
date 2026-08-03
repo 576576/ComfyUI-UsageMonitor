@@ -35,7 +35,7 @@ class CGPUInfo:
     """
     cuda = False
     pynvmlLoaded = False
-    amdsmiLoaded = False
+    adlxLoaded = False
     jtopLoaded = False
     cudaAvailable = False
     torchDevice = 'cpu'
@@ -75,20 +75,36 @@ class CGPUInfo:
             except Exception as e:
                 logger.warning('Could not init nvidia-ml-py (pynvml, NVIDIA). ' + str(e))
 
-            # Try to import amdsmi for AMD devices (only if NVIDIA failed)
+            # Try to import ADLX (adlxpybind) for AMD devices on Windows (only if NVIDIA failed)
             if not self.pynvmlLoaded:
                 try:
-                    import amdsmi
-                    amdsmi.amdsmi_init()
-                    self.amdsmi = amdsmi
-                    self.amdsmiLoaded = True
-                    logger.info('amdsmi (AMD) initialized.')
+                    import ADLXPybind as adlx
+                    self.adlx = adlx
+                    self._adlx_helper = adlx.ADLXHelper()
+                    res = self._adlx_helper.Initialize()
+                    if res != adlx.ADLX_RESULT.ADLX_OK:
+                        raise Exception(f'ADLX initialization failed: {res}')
+                    self._adlx_system = self._adlx_helper.GetSystemServices()
+                    if not self._adlx_system:
+                        raise Exception('Failed to get ADLX system services')
+                    self._adlx_gpu_holder = adlx.ADLXGPUHolder(self._adlx_system)
+                    if not self._adlx_gpu_holder.isValid():
+                        raise Exception('Failed to create ADLX GPU holder')
+                    self._adlx_gpu_list = self._adlx_gpu_holder.getGPUList()
+                    if not self._adlx_gpu_list:
+                        raise Exception('Failed to get ADLX GPU list')
+                    self._adlx_perf_monitoring = self._adlx_system.GetPerformanceMonitoringServices()
+                    self._adlx_vram_ranges = {}
+                    self._adlx_vram_cache_populated = False
+                    self._cache_adlx_vram_ranges()
+                    self.adlxLoaded = True
+                    logger.info('ADLX (AMD) initialized.')
                 except ImportError as e:
-                    logger.error('amdsmi is not installed, falling back to next backend. ' + str(e))
+                    logger.error('ADLXPybind (adlxpybind) is not installed, falling back to next backend. ' + str(e))
                 except Exception as e:
-                    logger.error('Could not init amdsmi (AMD), falling back to next backend. ' + str(e))
+                    logger.error('Could not init ADLX (AMD), falling back to next backend. ' + str(e))
 
-        self.anygpuLoaded = self.pynvmlLoaded or self.amdsmiLoaded or self.jtopLoaded
+        self.anygpuLoaded = self.pynvmlLoaded or self.adlxLoaded or self.jtopLoaded
 
         try:
             self.torchDevice = comfy.model_management.get_torch_device_name(comfy.model_management.get_torch_device())
@@ -99,7 +115,7 @@ class CGPUInfo:
             logger.warning('No GPU detected, disabling GPU monitoring.')
             self.anygpuLoaded = False
             self.pynvmlLoaded = False
-            self.amdsmiLoaded = False
+            self.adlxLoaded = False
             self.jtopLoaded = False
 
         if self.anygpuLoaded:
@@ -217,6 +233,88 @@ class CGPUInfo:
             'gpus': gpus,
         }
 
+    def _adlx_get_gpu(self, index):
+        """Get a fresh ADLX GPU object by index, or None."""
+        if not self.adlxLoaded or not self._adlx_gpu_list:
+            return None
+        try:
+            return self._adlx_gpu_list.At(index)
+        except Exception:
+            return None
+
+    def _adlx_get_metrics(self, deviceHandle):
+        """Get a fresh ADLX GPU object and its current metrics, or (None, None)."""
+        if not self.adlxLoaded or not self._adlx_perf_monitoring:
+            return None, None
+        gpu = self._adlx_get_gpu(deviceHandle)
+        if gpu is None:
+            return None, None
+        try:
+            metrics = self._adlx_perf_monitoring.GetCurrentGPUMetrics(gpu)
+            if metrics is None:
+                return None, None
+            return gpu, metrics
+        except Exception:
+            return None, None
+
+    def _adlx_release(self, metrics):
+        """Release ADLX metrics objects to avoid reference-counting issues."""
+        try:
+            if metrics is not None and hasattr(metrics, 'Release'):
+                metrics.Release()
+        except Exception:
+            pass
+
+    def _cache_adlx_vram_ranges(self):
+        """Cache the total VRAM (in MB) for every GPU index during init."""
+        if self._adlx_vram_cache_populated:
+            return
+        if not self._adlx_perf_monitoring or not self._adlx_gpu_list:
+            return
+        try:
+            if hasattr(self._adlx_gpu_list, 'Size'):
+                gpu_count = self._adlx_gpu_list.Size()
+            elif hasattr(self._adlx_gpu_list, 'GetCount'):
+                gpu_count = self._adlx_gpu_list.GetCount()
+            else:
+                gpu_count = 0
+                try:
+                    while True:
+                        gpu = self._adlx_gpu_list.At(gpu_count)
+                        if gpu is None:
+                            break
+                        del gpu
+                        gpu_count += 1
+                except Exception:
+                    pass
+
+            for i in range(gpu_count):
+                try:
+                    gpu = self._adlx_gpu_list.At(i)
+                    if gpu:
+                        support = self._adlx_perf_monitoring.GetSupportedGPUMetrics(gpu)
+                        if support:
+                            try:
+                                _, max_vram_mb = support.GetGPUVRAMRange()
+                                self._adlx_vram_ranges[i] = max_vram_mb
+                            except Exception:
+                                self._adlx_vram_ranges[i] = 0
+                            try:
+                                if hasattr(support, 'Release'):
+                                    support.Release()
+                            except Exception:
+                                pass
+                        else:
+                            self._adlx_vram_ranges[i] = 0
+                        del gpu
+                    else:
+                        self._adlx_vram_ranges[i] = 0
+                except Exception:
+                    self._adlx_vram_ranges[i] = 0
+            self._adlx_vram_cache_populated = True
+        except Exception as e:
+            logger.debug('Could not cache ADLX VRAM ranges. ' + str(e))
+
     def deviceGetCount(self):
         """Number of detected GPUs. Falls back to the next backend when the current one fails."""
         if self.pynvmlLoaded:
@@ -225,16 +323,30 @@ class CGPUInfo:
             except Exception as e:
                 logger.error('nvidia-ml-py (pynvml) is not available, falling back to next backend. ' + str(e))
                 self.pynvmlLoaded = False
-        if self.amdsmiLoaded:
+        if self.adlxLoaded:
             try:
-                return len(self.amdsmi.amdsmi_get_processor_handles())
+                if hasattr(self._adlx_gpu_list, 'Size'):
+                    return self._adlx_gpu_list.Size()
+                elif hasattr(self._adlx_gpu_list, 'GetCount'):
+                    return self._adlx_gpu_list.GetCount()
+                else:
+                    count = 0
+                    try:
+                        while True:
+                            gpu = self._adlx_gpu_list.At(count)
+                            if gpu is None:
+                                break
+                            count += 1
+                    except Exception:
+                        pass
+                    return count
             except Exception as e:
-                logger.error('amdsmi is not available, falling back to next backend. ' + str(e))
-                self.amdsmiLoaded = False
+                logger.error('ADLX is not available, falling back to next backend. ' + str(e))
+                self.adlxLoaded = False
         if self.jtopLoaded:
             # For Jetson devices, we assume there's one GPU
             return 1
-        self.anygpuLoaded = self.pynvmlLoaded or self.amdsmiLoaded or self.jtopLoaded
+        self.anygpuLoaded = self.pynvmlLoaded or self.adlxLoaded or self.jtopLoaded
         return 0
 
     def deviceGetHandleByIndex(self, index):
@@ -245,12 +357,16 @@ class CGPUInfo:
             except Exception as e:
                 logger.error('nvidia-ml-py (pynvml) is not available, falling back to next backend. ' + str(e))
                 self.pynvmlLoaded = False
-        if self.amdsmiLoaded:
+        if self.adlxLoaded:
             try:
-                return self.amdsmi.amdsmi_get_processor_handles()[index]
+                gpu = self._adlx_get_gpu(index)
+                if gpu is None:
+                    raise Exception(f'Failed to get GPU at index {index}')
+                # index acts as the handle; fresh GPU objects are fetched per query
+                return index
             except Exception as e:
-                logger.error('amdsmi is not available, falling back to next backend. ' + str(e))
-                self.amdsmiLoaded = False
+                logger.error('ADLX is not available, falling back to next backend. ' + str(e))
+                self.adlxLoaded = False
         if self.jtopLoaded:
             return index  # On Jetson, index acts as handle
         return 0
@@ -271,12 +387,15 @@ class CGPUInfo:
                 logger.error(f"Could not get GPU name: {e}")
 
             return gpuName
-        elif self.amdsmiLoaded:
+        elif self.adlxLoaded:
             try:
-                board_info = self.amdsmi.amdsmi_get_gpu_board_info(deviceHandle)
-                gpuName = board_info.get('product_name', '') or 'Unknown GPU'
-                if not gpuName or gpuName.startswith('0x'):
-                    gpuName = 'Unknown GPU'
+                gpu = self._adlx_get_gpu(deviceIndex)
+                gpuName = 'Unknown GPU'
+                if gpu is not None:
+                    try:
+                        gpuName = gpu.Name()
+                    except Exception:
+                        gpuName = 'Unknown GPU'
                 return gpuName
             except Exception as e:
                 logger.error('Could not get GPU name. ' + str(e))
@@ -300,12 +419,10 @@ class CGPUInfo:
             except Exception as e:
                 logger.error('Could not get NVIDIA driver version. ' + str(e))
                 return 'NVIDIA Driver: unknown'
-        elif self.amdsmiLoaded:
+        elif self.adlxLoaded:
             try:
-                handles = self.amdsmi.amdsmi_get_processor_handles()
-                if handles:
-                    driver_info = self.amdsmi.amdsmi_get_gpu_driver_info(handles[0])
-                    return f'AMD Driver: {driver_info.get("driver_version", "unknown")}'
+                if hasattr(self._adlx_system, 'GetDriverVersion'):
+                    return f'AMD Driver: {self._adlx_system.GetDriverVersion()}'
                 return 'AMD Driver: unknown'
             except Exception as e:
                 logger.error('Could not get AMD driver version. ' + str(e))
@@ -323,16 +440,17 @@ class CGPUInfo:
             except Exception as e:
                 logger.error('Could not get GPU utilization. ' + str(e))
                 return -1
-        elif self.amdsmiLoaded:
+        elif self.adlxLoaded:
+            gpu, metrics = self._adlx_get_metrics(deviceHandle)
+            if metrics is None:
+                return -1
             try:
-                activity = self.amdsmi.amdsmi_get_gpu_activity(deviceHandle)
-                gpu_util = activity.get('gfx_activity', -1)
-                if gpu_util == 'N/A' or gpu_util is None:
-                    return -1
-                return gpu_util
+                return int(metrics.GPUUsage())
             except Exception as e:
                 logger.error('Could not get GPU utilization. ' + str(e))
                 return -1
+            finally:
+                self._adlx_release(metrics)
         elif self.jtopLoaded:
             # GPU utilization from jtop stats
             try:
@@ -352,17 +470,20 @@ class CGPUInfo:
             except Exception as e:
                 logger.error('Could not get GPU memory info. ' + str(e))
                 return {'total': 0, 'used': 0}
-        elif self.amdsmiLoaded:
+        elif self.adlxLoaded:
+            gpu, metrics = self._adlx_get_metrics(deviceHandle)
+            if metrics is None:
+                return {'total': 0, 'used': 0}
             try:
-                vram = self.amdsmi.amdsmi_get_gpu_vram_usage(deviceHandle)
-                # amdsmi returns values in MiB; convert to bytes to match pynvml
-                return {
-                    'total': vram.get('vram_total', 0) * 1024 * 1024,
-                    'used': vram.get('vram_used', 0) * 1024 * 1024,
-                }
+                used_memory = int(metrics.GPUVRAM()) * 1024 * 1024  # MB -> bytes
+                max_vram_mb = self._adlx_vram_ranges.get(deviceHandle, 0)
+                total_memory = int(max_vram_mb) * 1024 * 1024
+                return {'total': total_memory, 'used': used_memory}
             except Exception as e:
                 logger.error('Could not get GPU memory info. ' + str(e))
                 return {'total': 0, 'used': 0}
+            finally:
+                self._adlx_release(metrics)
         elif self.jtopLoaded:
             mem_data = self.jtopInstance.memory['RAM']
             total = mem_data['tot']
@@ -378,21 +499,17 @@ class CGPUInfo:
             except Exception as e:
                 logger.error('Could not get GPU temperature. ' + str(e))
                 return -1
-        elif self.amdsmiLoaded:
+        elif self.adlxLoaded:
+            gpu, metrics = self._adlx_get_metrics(deviceHandle)
+            if metrics is None:
+                return -1
             try:
-                temp = self.amdsmi.amdsmi_get_temp_metric(
-                    deviceHandle,
-                    self.amdsmi.AmdSmiTemperatureType.EDGE,
-                    self.amdsmi.AmdSmiTemperatureMetric.CURRENT,
-                )
-                # amdsmi docs report millidegrees; some builds already return Celsius.
-                # Normalize to degrees Celsius.
-                if temp > 1000:
-                    temp = temp / 1000.0
-                return round(temp)
+                return int(metrics.GPUTemperature())
             except Exception as e:
                 logger.error('Could not get GPU temperature. ' + str(e))
                 return -1
+            finally:
+                self._adlx_release(metrics)
         elif self.jtopLoaded:
             try:
                 temperature = self.jtopInstance.stats.get('Temp gpu', -1)
@@ -409,10 +526,17 @@ class CGPUInfo:
                 self.pynvml.nvmlShutdown()
             except Exception as e:
                 logger.error('Could not shut down nvidia-ml-py (pynvml). ' + str(e))
-        if self.amdsmiLoaded:
+        if self.adlxLoaded:
             try:
-                self.amdsmi.amdsmi_shut_down()
+                self._adlx_vram_ranges.clear()
+                self._adlx_vram_cache_populated = False
+                if self._adlx_helper is not None:
+                    try:
+                        self._adlx_helper.Terminate()
+                    except Exception:
+                        pass
+                    self._adlx_helper = None
             except Exception as e:
-                logger.error('Could not shut down amdsmi (AMD). ' + str(e))
+                logger.error('Could not shut down ADLX (AMD). ' + str(e))
         if self.jtopLoaded and self.jtopInstance is not None:
             self.jtopInstance.close()

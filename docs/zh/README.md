@@ -30,17 +30,17 @@
 ![Monitors](../../assets/images/monitor-settings.png)
 
 > **注意事项:**
-> - 使用 CUDA（NVIDIA）或 ROCm（AMD）时即可获取 GPU 数据。
+> - 使用 CUDA（NVIDIA）或 AMD（Windows 下通过 ADLX）时即可获取 GPU 数据。
 > - 本扩展需要 ComfyUI 1915（或更高版本）。
 > - 监控开销很低（占用 0.1% 到 0.5%），您可以在设置中将其禁用（将 `刷新频率` 设为 `0`）。
-> - 数据来自以下库：[psutil](https://pypi.org/project/psutil/)、[torch](https://pytorch.org/)、[nvidia-ml-py](https://pypi.org/project/nvidia-ml-py/)（NVIDIA 官方库）和 [amdsmi](https://pypi.org/project/amdsmi/)（AMD 官方库）。
+> - 数据来自以下库：[psutil](https://pypi.org/project/psutil/)、[torch](https://pytorch.org/)、[nvidia-ml-py](https://pypi.org/project/nvidia-ml-py/)（NVIDIA 官方库）和 [ADLXPybind](https://pypi.org/project/adlxpybind/)（AMD 官方 ADLX 库，Windows）。
 
 ## 功能特性
 
 功能 | 描述
 --- | ---
 实时监控 | 在 ComfyUI 菜单上实时显示 CPU、GPU、内存、显存、GPU 温度和磁盘空间
-支持 NVIDIA 与 AMD | 通过 `nvidia-ml-py` 支持 CUDA，通过 `amdsmi` 支持 ROCm
+支持 NVIDIA 与 AMD | 通过 `nvidia-ml-py` 支持 CUDA，通过 `ADLXPybind` 支持 AMD（Windows）
 横向与纵向布局 | 选择适合您工作流的监控布局
 完全可配置 | 刷新频率和显示的资源均可在设置菜单中配置
 
@@ -59,7 +59,7 @@ cd ComfyUI-UsageMonitor
 pip install -r requirements.txt
 ```
 
-> **AMD 用户（ROCm）：** 本分支开箱即用地支持 AMD GPU 监控（使用 `amdsmi`）——按上述说明正常安装即可。
+> **AMD 用户（Windows）：** 通过 `adlxpybind`（ADLX）开箱即用地支持 AMD GPU 监控——按上述说明正常安装即可。
 
 ### 从管理器安装
 

@@ -29,24 +29,24 @@
     "monitorConfig": "現在您可以識別工作流程中的瓶頸，知道何時該重新啟動伺服器、卸載模型甚至關閉一些分頁！您還可以設定重新整理頻率以及要顯示哪些資源：",
     "notesTitle": "注意事項",
     "installIntro": "1. 安裝 [ComfyUI](https://github.com/comfyanonymous/ComfyUI)。\n2. 將此儲存庫複製到 `custom_nodes`（見下文）。\n3. 啟動 ComfyUI。",
-    "amdNote": "> **AMD 使用者（ROCm）：** 本分支開箱即用地支援 AMD GPU 監控（使用 `amdsmi`）——依照上述說明正常安裝即可。",
+    "amdNote": "> **AMD 使用者（Windows）：** 透過 `adlxpybind`（ADLX）開箱即用地支援 AMD GPU 監控——依照上述說明正常安裝即可。",
     "managerDesc": "在[管理員](https://github.com/ltdrdata/ComfyUI-Manager.git)中搜尋 `usagemonitor` 並安裝。",
     "ack": "本專案是原版 [**ComfyUI-Crystools**](https://github.com/crystian/ComfyUI-Crystools)（由 [Crystian](https://github.com/crystian) 建立）的更名延續。  \n原作品的功勞歸於原作者。"
   },
 
   "_comment_notes": "── 注意事項 ──",
   "notes": {
-    "note1": "使用 CUDA（NVIDIA）或 ROCm（AMD）時即可取得 GPU 資料。",
+    "note1": "使用 CUDA（NVIDIA）或 AMD（Windows 下透過 ADLX）時即可取得 GPU 資料。",
     "note2": "本擴充功能需要 ComfyUI 1915（或更高版本）。",
     "note3": "監控開銷很低（佔用 0.1% 到 0.5%），您可以在設定中將其停用（將 `重新整理頻率` 設為 `0`）。",
-    "note4": "資料來自以下程式庫：[psutil](https://pypi.org/project/psutil/)、[torch](https://pytorch.org/)、[nvidia-ml-py](https://pypi.org/project/nvidia-ml-py/)（NVIDIA 官方程式庫）和 [amdsmi](https://pypi.org/project/amdsmi/)（AMD 官方程式庫）。"
+    "note4": "資料來自以下程式庫：[psutil](https://pypi.org/project/psutil/)、[torch](https://pytorch.org/)、[nvidia-ml-py](https://pypi.org/project/nvidia-ml-py/)（NVIDIA 官方程式庫）和 [ADLXPybind](https://pypi.org/project/adlxpybind/)（AMD 官方 ADLX 程式庫，Windows）。"
   },
 
   "_comment_features": "── 功能特色 ──",
   "features": {
     "title": ["功能", "描述"],
     "feat1": ["即時監控", "在 ComfyUI 選單上即時顯示 CPU、GPU、記憶體、顯存、GPU 溫度和磁碟空間"],
-    "feat2": ["支援 NVIDIA 與 AMD", "透過 `nvidia-ml-py` 支援 CUDA，透過 `amdsmi` 支援 ROCm"],
+    "feat2": ["支援 NVIDIA 與 AMD", "透過 `nvidia-ml-py` 支援 CUDA，透過 `ADLXPybind` 支援 AMD（Windows）"],
     "feat3": ["橫向與縱向版面配置", "選擇適合您工作流程的監控版面配置"],
     "feat4": ["完全可設定", "重新整理頻率和顯示的資源均可在設定選單中設定"]
   },

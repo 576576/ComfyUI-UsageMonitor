@@ -2,9 +2,9 @@
 @author: Crystian
 @title: UsageMonitor
 @nickname: UsageMonitor
-@version: 1.27.4
+@version: 1.30.2
 @project: "https://github.com/576576/ComfyUI-UsageMonitor",
-@description: Plugins for multiples uses, mainly for debugging, you need them! IG: https://www.instagram.com/crystian.ia
+@description: A real-time resource monitor for ComfyUI: CPU, GPU, RAM, VRAM, GPU temperature and disk space.
 """
 
 from .core import version, logger

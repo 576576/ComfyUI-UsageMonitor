@@ -30,17 +30,17 @@ Now you can identify the bottlenecks in your workflow and know when it's time to
 ![Monitors](../../assets/images/monitor-settings.png)
 
 > **Notes:**
-> - The GPU data is available when you use CUDA (NVIDIA) or ROCm (AMD).
+> - The GPU data is available when you use CUDA (NVIDIA) or AMD (via ADLX on Windows).
 > - This extension needs ComfyUI 1915 (or higher).
 > - The cost of the monitor is low (0.1 to 0.5% of utilization), you can disable it from settings (`Refresh rate` to `0`).
-> - Data comes from these libraries: [psutil](https://pypi.org/project/psutil/), [torch](https://pytorch.org/), [nvidia-ml-py](https://pypi.org/project/nvidia-ml-py/) (official NVIDIA library) and [amdsmi](https://pypi.org/project/amdsmi/) (official AMD library).
+> - Data comes from these libraries: [psutil](https://pypi.org/project/psutil/), [torch](https://pytorch.org/), [nvidia-ml-py](https://pypi.org/project/nvidia-ml-py/) (official NVIDIA library) and [ADLXPybind](https://pypi.org/project/adlxpybind/) (official AMD ADLX library, Windows).
 
 ## Features
 
 Feature | Description
 --- | ---
 Real-time monitoring | CPU, GPU, RAM, VRAM, GPU temperature and disk space shown live on the ComfyUI menu
-NVIDIA & AMD support | CUDA via `nvidia-ml-py`, ROCm via `amdsmi`
+NVIDIA & AMD support | CUDA via `nvidia-ml-py`, AMD via `ADLXPybind` (Windows)
 Horizontal & vertical layouts | Pick the monitor layout that fits your workflow
 Fully configurable | Refresh rate and shown resources are configurable from the settings menu
 
@@ -59,7 +59,7 @@ cd ComfyUI-UsageMonitor
 pip install -r requirements.txt
 ```
 
-> **For AMD users (ROCm):** GPU monitoring works out of the box on this branch (uses `amdsmi`) — install normally as described above.
+> **For AMD users (Windows):** GPU monitoring works out of the box via ADLX (`adlxpybind`) — install normally as described above.
 
 ### Install from manager
 
