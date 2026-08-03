@@ -15,9 +15,11 @@ class CHardwareInfo:
     Specially for share it to other software.
     """
     switchCPU = False
+    switchCPUTemp = False
     switchHDD = False
     switchRAM = False
     whichHDD = '/' # breaks linux
+    cpuName = 'Unknown'
 
     @property
     def switchGPU(self):
@@ -33,8 +35,9 @@ class CHardwareInfo:
     def switchVRAM(self, value):
         self.GPUInfo.switchVRAM = value
 
-    def __init__(self, switchCPU=False, switchGPU=False, switchHDD=False, switchRAM=False, switchVRAM=False):
+    def __init__(self, switchCPU=False, switchCPUTemp=False, switchGPU=False, switchHDD=False, switchRAM=False, switchVRAM=False):
         self.switchCPU = switchCPU
+        self.switchCPUTemp = switchCPUTemp
         self.switchHDD = switchHDD
         self.switchRAM = switchRAM
 
@@ -76,6 +79,7 @@ class CHardwareInfo:
         except:
             pass
 
+        self.cpuName = brand
         specName = 'CPU: ' + brand
         specArch = 'Arch: ' + arch_string_raw
         specOs = 'OS: ' + str(platform.system()) + ' ' + str(platform.release())
@@ -87,8 +91,34 @@ class CHardwareInfo:
     def getGPUInfo(self):
         return self.GPUInfo.getInfo()
 
+    def getCpuInfo(self):
+        return {'name': self.cpuName}
+
+    def _get_cpu_temperature(self):
+        """Best-effort CPU temperature in °C, or -1 when unavailable."""
+        sensors = getattr(psutil, 'sensors_temperatures', None)
+        if sensors is None:
+            return -1
+        try:
+            temps = sensors()
+        except Exception as e:
+            logger.error(f"Could not get CPU temperature. {e}")
+            return -1
+        if not temps:
+            return -1
+        # Prefer well-known sensor labels, then fall back to any sensor.
+        for name in ('coretemp', 'k10temp', 'cpu_thermal', 'soc_thermal', 'acpitz', 'thinkpad', 'thermal_zone0'):
+            entries = temps.get(name)
+            if entries:
+                return entries[0].current
+        for entries in temps.values():
+            if entries:
+                return entries[0].current
+        return -1
+
     def getStatus(self):
         cpu = -1
+        cpuTemperature = -1
         ramTotal = -1
         ramUsed = -1
         ramUsedPercent = -1
@@ -98,6 +128,9 @@ class CHardwareInfo:
 
         if self.switchCPU:
             cpu = psutil.cpu_percent()
+
+        if self.switchCPUTemp:
+            cpuTemperature = self._get_cpu_temperature()
 
         if self.switchRAM:
             ram = psutil.virtual_memory()
@@ -121,6 +154,7 @@ class CHardwareInfo:
 
         return {
             'cpu_utilization': cpu,
+            'cpu_temperature': cpuTemperature,
             'ram_total': ramTotal,
             'ram_used': ramUsed,
             'ram_used_percent': ramUsedPercent,

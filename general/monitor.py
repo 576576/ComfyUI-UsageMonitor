@@ -15,9 +15,9 @@ class CMonitor:
     rate = 0
     hardwareInfo = None
 
-    def __init__(self, rate=5, switchCPU=False, switchGPU=False, switchHDD=False, switchRAM=False, switchVRAM=False):
+    def __init__(self, rate=5, switchCPU=False, switchCPUTemp=False, switchGPU=False, switchHDD=False, switchRAM=False, switchVRAM=False):
         self.rate = rate
-        self.hardwareInfo = CHardwareInfo(switchCPU, switchGPU, switchHDD, switchRAM, switchVRAM)
+        self.hardwareInfo = CHardwareInfo(switchCPU, switchCPUTemp, switchGPU, switchHDD, switchRAM, switchVRAM)
 
         self.startMonitor()
 
@@ -63,5 +63,5 @@ class CMonitor:
         self.threadController.set()
 
 
-cmonitor = CMonitor(1, True, True, True, True, True)
+cmonitor = CMonitor(1, True, False, True, True, True, True)
 

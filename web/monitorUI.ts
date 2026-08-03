@@ -1,4 +1,3 @@
-import { app } from './comfy/index.js';
 import { createStyleSheet, formatBytes } from './utils.js';
 
 export class MonitorUI {
@@ -12,6 +11,7 @@ export class MonitorUI {
     private monitorCPUElement: TMonitorSettings,
     private monitorRAMElement: TMonitorSettings,
     private monitorHDDElement: TMonitorSettings,
+    private monitorCPUTempElement: TMonitorSettings,
     private monitorGPUSettings: TMonitorSettings[],
     private monitorVRAMSettings: TMonitorSettings[],
     private monitorTemperatureSettings: TMonitorSettings[],
@@ -36,6 +36,7 @@ export class MonitorUI {
 
     // this.container.style.order = '2';
     this.rootElement.appendChild(this.createMonitor(this.monitorCPUElement));
+    this.rootElement.appendChild(this.createMonitor(this.monitorCPUTempElement));
     this.rootElement.appendChild(this.createMonitor(this.monitorRAMElement));
     this.rootElement.appendChild(this.createMonitor(this.monitorHDDElement));
     this.updateAllAnimationDuration(this.currentRate);
@@ -74,6 +75,7 @@ export class MonitorUI {
 
   updateDisplay = (data: TStatsData): void => {
     this.updateMonitor(this.monitorCPUElement, data.cpu_utilization);
+    this.updateMonitor(this.monitorCPUTempElement, data.cpu_temperature);
     this.updateMonitor(this.monitorRAMElement, data.ram_used_percent, data.ram_used, data.ram_total);
     this.updateMonitor(this.monitorHDDElement, data.hdd_used_percent, data.hdd_used, data.hdd_total);
 
@@ -172,6 +174,7 @@ export class MonitorUI {
 
   updateAllAnimationDuration = (value: number): void => {
     this.updatedAnimationDuration(this.monitorCPUElement, value);
+    this.updatedAnimationDuration(this.monitorCPUTempElement, value);
     this.updatedAnimationDuration(this.monitorRAMElement, value);
     this.updatedAnimationDuration(this.monitorHDDElement, value);
     this.monitorGPUSettings.forEach((monitorSettings) => {
@@ -238,9 +241,13 @@ export class MonitorUI {
     return monitorSettings.htmlMonitorRef;
   };
 
-  updateMonitorSize = (width: number, height: number): void => {
+  updateMonitorStyle = (width: number, height: number, labelFontSize: number, valueFontSize: number, textOpacity: number): void => {
     // eslint-disable-next-line max-len
-    this.styleSheet.innerText = `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-content {height: ${height}px; width: ${width}px;}`;
+    this.styleSheet.innerText = [
+      `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-content {height: ${height}px; width: ${width}px;}`,
+      `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-text {font-size: ${labelFontSize}px; opacity: ${textOpacity / 100};}`,
+      `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-label {font-size: ${valueFontSize}px;}`,
+    ].join('\n');
   };
 
   showMonitor = (monitorSettings: TMonitorSettings, value: boolean): void => {

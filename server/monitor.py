@@ -42,6 +42,13 @@ async def newSettings(request):
 
             cmonitor.hardwareInfo.switchRAM = switchRAM
 
+        if 'switchCPUTemp' in settings is not None:
+            switchCPUTemp = settings['switchCPUTemp']
+            if type(switchCPUTemp) is not bool:
+                raise Exception('switchCPUTemp must be an boolean.')
+
+            cmonitor.hardwareInfo.switchCPUTemp = switchCPUTemp
+
         if 'whichHDD' in settings is not None:
             whichHDD = settings['whichHDD']
             if type(whichHDD) is not str:
@@ -91,6 +98,15 @@ def getGPUs(request):
     try:
         gpuInfo = cmonitor.hardwareInfo.getGPUInfo()
         return web.json_response(gpuInfo)
+    except Exception as e:
+        logger.error(e)
+        return web.Response(status=400, text=str(e))
+
+
+@PromptServer.instance.routes.get("/usagemonitor/monitor/CPU")
+def getCPU(request):
+    try:
+        return web.json_response(cmonitor.hardwareInfo.getCpuInfo())
     except Exception as e:
         logger.error(e)
         return web.Response(status=400, text=str(e))

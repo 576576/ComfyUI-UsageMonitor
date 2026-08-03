@@ -1,7 +1,6 @@
-import { app } from './comfy/index.js';
 import { createStyleSheet, formatBytes } from './utils.js';
 export class MonitorUI {
-    constructor(rootElement, monitorCPUElement, monitorRAMElement, monitorHDDElement, monitorGPUSettings, monitorVRAMSettings, monitorTemperatureSettings, currentRate, translate) {
+    constructor(rootElement, monitorCPUElement, monitorRAMElement, monitorHDDElement, monitorCPUTempElement, monitorGPUSettings, monitorVRAMSettings, monitorTemperatureSettings, currentRate, translate) {
         Object.defineProperty(this, "rootElement", {
             enumerable: true,
             configurable: true,
@@ -25,6 +24,12 @@ export class MonitorUI {
             configurable: true,
             writable: true,
             value: monitorHDDElement
+        });
+        Object.defineProperty(this, "monitorCPUTempElement", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: monitorCPUTempElement
         });
         Object.defineProperty(this, "monitorGPUSettings", {
             enumerable: true,
@@ -89,6 +94,7 @@ export class MonitorUI {
                     throw Error('UsageMonitor: MonitorUI - Container not found');
                 }
                 this.rootElement.appendChild(this.createMonitor(this.monitorCPUElement));
+                this.rootElement.appendChild(this.createMonitor(this.monitorCPUTempElement));
                 this.rootElement.appendChild(this.createMonitor(this.monitorRAMElement));
                 this.rootElement.appendChild(this.createMonitor(this.monitorHDDElement));
                 this.updateAllAnimationDuration(this.currentRate);
@@ -132,6 +138,7 @@ export class MonitorUI {
             writable: true,
             value: (data) => {
                 this.updateMonitor(this.monitorCPUElement, data.cpu_utilization);
+                this.updateMonitor(this.monitorCPUTempElement, data.cpu_temperature);
                 this.updateMonitor(this.monitorRAMElement, data.ram_used_percent, data.ram_used, data.ram_total);
                 this.updateMonitor(this.monitorHDDElement, data.hdd_used_percent, data.hdd_used, data.hdd_total);
                 if (data.gpus === undefined || data.gpus.length === 0) {
@@ -214,6 +221,7 @@ export class MonitorUI {
             writable: true,
             value: (value) => {
                 this.updatedAnimationDuration(this.monitorCPUElement, value);
+                this.updatedAnimationDuration(this.monitorCPUTempElement, value);
                 this.updatedAnimationDuration(this.monitorRAMElement, value);
                 this.updatedAnimationDuration(this.monitorHDDElement, value);
                 this.monitorGPUSettings.forEach((monitorSettings) => {
@@ -280,12 +288,16 @@ export class MonitorUI {
                 return monitorSettings.htmlMonitorRef;
             }
         });
-        Object.defineProperty(this, "updateMonitorSize", {
+        Object.defineProperty(this, "updateMonitorStyle", {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: (width, height) => {
-                this.styleSheet.innerText = `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-content {height: ${height}px; width: ${width}px;}`;
+            value: (width, height, labelFontSize, valueFontSize, textOpacity) => {
+                this.styleSheet.innerText = [
+                    `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-content {height: ${height}px; width: ${width}px;}`,
+                    `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-text {font-size: ${labelFontSize}px; opacity: ${textOpacity / 100};}`,
+                    `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-label {font-size: ${valueFontSize}px;}`,
+                ].join('\n');
             }
         });
         Object.defineProperty(this, "showMonitor", {

@@ -3,6 +3,7 @@ export declare class MonitorUI {
     private monitorCPUElement;
     private monitorRAMElement;
     private monitorHDDElement;
+    private monitorCPUTempElement;
     private monitorGPUSettings;
     private monitorVRAMSettings;
     private monitorTemperatureSettings;
@@ -12,7 +13,7 @@ export declare class MonitorUI {
     lastMonitor: number;
     styleSheet: HTMLStyleElement;
     maxVRAMUsed: Record<number, number>;
-    constructor(rootElement: HTMLElement, monitorCPUElement: TMonitorSettings, monitorRAMElement: TMonitorSettings, monitorHDDElement: TMonitorSettings, monitorGPUSettings: TMonitorSettings[], monitorVRAMSettings: TMonitorSettings[], monitorTemperatureSettings: TMonitorSettings[], currentRate: number, translate: (key: string) => string);
+    constructor(rootElement: HTMLElement, monitorCPUElement: TMonitorSettings, monitorRAMElement: TMonitorSettings, monitorHDDElement: TMonitorSettings, monitorCPUTempElement: TMonitorSettings, monitorGPUSettings: TMonitorSettings[], monitorVRAMSettings: TMonitorSettings[], monitorTemperatureSettings: TMonitorSettings[], currentRate: number, translate: (key: string) => string);
     createDOM: () => void;
     createDOMGPUMonitor: (monitorSettings?: TMonitorSettings) => void;
     orderMonitors: () => void;
@@ -21,7 +22,7 @@ export declare class MonitorUI {
     updateAllAnimationDuration: (value: number) => void;
     updatedAnimationDuration: (monitorSettings: TMonitorSettings, value: number) => void;
     createMonitor: (monitorSettings?: TMonitorSettings) => HTMLDivElement;
-    updateMonitorSize: (width: number, height: number) => void;
+    updateMonitorStyle: (width: number, height: number, labelFontSize: number, valueFontSize: number, textOpacity: number) => void;
     showMonitor: (monitorSettings: TMonitorSettings, value: boolean) => void;
     resetMaxVRAM: () => void;
 }

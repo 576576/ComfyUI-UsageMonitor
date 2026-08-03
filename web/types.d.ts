@@ -20,6 +20,7 @@ type TGpuName = {
 
 type TStatsData = {
   cpu_utilization: number,
+  cpu_temperature: number,
   device: string,
   gpus: TGpuStatData[],
   hdd_total: number,
@@ -33,6 +34,7 @@ type TStatsData = {
 type TStatsSettings = {
   rate?: number,
   switchCPU?: boolean,
+  switchCPUTemp?: boolean,
   switchGPU?: boolean,
   switchHDD?: boolean,
   switchRAM?: boolean,

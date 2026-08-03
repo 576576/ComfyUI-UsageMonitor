@@ -1,5 +1,4 @@
 import { app, api, ComfyButtonGroup } from './comfy/index.js';
-import { commonPrefix } from './common.js';
 import { MonitorUI } from './monitorUI.js';
 import { Colors } from './styles.js';
 import { convertNumberToPascalCase } from './utils.js';
@@ -17,12 +16,6 @@ class UsageMonitorMonitor {
             configurable: true,
             writable: true,
             value: 'UsageMonitor.monitor'
-        });
-        Object.defineProperty(this, "menuPrefix", {
-            enumerable: true,
-            configurable: true,
-            writable: true,
-            value: commonPrefix
         });
         Object.defineProperty(this, "menuDisplayOption", {
             enumerable: true,
@@ -102,6 +95,74 @@ class UsageMonitorMonitor {
             writable: true,
             value: void 0
         });
+        Object.defineProperty(this, "monitorCPUTempElement", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "cpuName", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: 'Unknown CPU'
+        });
+        Object.defineProperty(this, "translations", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: {}
+        });
+        Object.defineProperty(this, "translate", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: (key) => {
+                const parts = key.split('.');
+                let value = this.translations;
+                for (const part of parts) {
+                    if (value === null || value === undefined || typeof value !== 'object') {
+                        return key;
+                    }
+                    value = value[part];
+                }
+                return typeof value === 'string' ? value : key;
+            }
+        });
+        Object.defineProperty(this, "getCurrentLanguage", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: () => {
+                try {
+                    const comfyLang = app.translation?.currentLanguage?.() ??
+                        app.translation?.language;
+                    if (comfyLang) {
+                        return comfyLang;
+                    }
+                }
+                catch (error) {
+                }
+                return navigator.language || 'en';
+            }
+        });
+        Object.defineProperty(this, "getTranslationsFromServer", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: async () => {
+                try {
+                    const lang = this.getCurrentLanguage();
+                    const resp = await api.fetchApi(`/usagemonitor/translations?lang=${encodeURIComponent(lang)}`, { cache: 'no-store' });
+                    if (resp.status === 200) {
+                        this.translations = await resp.json();
+                    }
+                }
+                catch (error) {
+                    console.error('UsageMonitor: failed to load translations', error);
+                }
+            }
+        });
         Object.defineProperty(this, "monitorWidthId", {
             enumerable: true,
             configurable: true,
@@ -126,62 +187,59 @@ class UsageMonitorMonitor {
             writable: true,
             value: 30
         });
-        Object.defineProperty(this, "translations", {
+        Object.defineProperty(this, "labelFontSizeId", {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: {}
+            value: 'UsageMonitor.LabelFontSize'
         });
-        Object.defineProperty(this, "translate", {
+        Object.defineProperty(this, "labelFontSize", {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: (key) => {
-                // Support nested keys with dot notation, e.g. 'desc.Refresh interval'.
-                const parts = key.split('.');
-                let value = this.translations;
-                for (const part of parts) {
-                    if (value === null || value === undefined || typeof value !== 'object') {
-                        return key;
-                    }
-                    value = value[part];
-                }
-                return typeof value === 'string' ? value : key;
-            }
+            value: 10
         });
-        Object.defineProperty(this, "getCurrentLanguage", {
+        Object.defineProperty(this, "valueFontSizeId", {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: () => {
-                try {
-                    const comfyLang = app.translation?.currentLanguage?.() ?? app.translation?.language;
-                    if (comfyLang) {
-                        return comfyLang;
-                    }
-                }
-                catch (error) {
-                    // ignore
-                }
-                return navigator.language || 'en';
-            }
+            value: 'UsageMonitor.ValueFontSize'
         });
-        Object.defineProperty(this, "getTranslationsFromServer", {
+        Object.defineProperty(this, "valueFontSize", {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: async () => {
-                try {
-                    const lang = this.getCurrentLanguage();
-                    const resp = await api.fetchApi(`/usagemonitor/translations?lang=${encodeURIComponent(lang)}`, { cache: 'no-store' });
-                    if (resp.status === 200) {
-                        this.translations = await resp.json();
-                    }
-                }
-                catch (error) {
-                    console.error('UsageMonitor: failed to load translations', error);
-                }
-            }
+            value: 10
+        });
+        Object.defineProperty(this, "textOpacityId", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: 'UsageMonitor.TextOpacity'
+        });
+        Object.defineProperty(this, "textOpacity", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: 100
+        });
+        Object.defineProperty(this, "settingsLabelFontSize", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "settingsValueFontSize", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "settingsTextOpacity", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
         });
         Object.defineProperty(this, "createSettingsRate", {
             enumerable: true,
@@ -190,7 +248,7 @@ class UsageMonitorMonitor {
             value: () => {
                 this.settingsRate = {
                     id: 'UsageMonitor.RefreshRate',
-                    name: this.translate('Refresh per second'),
+                    name: this.translate('Refresh interval'),
                     category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'refresh'],
                     tooltip: this.translate('desc.Refresh interval'),
                     type: 'slider',
@@ -221,6 +279,7 @@ class UsageMonitorMonitor {
                         }
                         const data = {
                             cpu_utilization: 0,
+                            cpu_temperature: 0,
                             device: 'cpu',
                             gpus: [
                                 {
@@ -275,8 +334,7 @@ class UsageMonitorMonitor {
                             console.error(error);
                             return;
                         }
-                        const h = app.extensionManager.setting.get(this.monitorHeightId);
-                        this.monitorUI?.updateMonitorSize(valueNumber, h);
+                        this.updateMonitorStyle();
                     },
                 };
             }
@@ -310,8 +368,62 @@ class UsageMonitorMonitor {
                             console.error(error);
                             return;
                         }
-                        const w = await app.extensionManager.setting.get(this.monitorWidthId);
-                        this.monitorUI?.updateMonitorSize(w, valueNumber);
+                        this.updateMonitorStyle();
+                    },
+                };
+            }
+        });
+        Object.defineProperty(this, "createSettingsFontSize", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: () => {
+                this.settingsLabelFontSize = {
+                    id: this.labelFontSizeId,
+                    name: this.translate('Label Font Size'),
+                    category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'fontsize'],
+                    tooltip: this.translate('desc.Label font size'),
+                    type: 'slider',
+                    attrs: {
+                        min: 6,
+                        max: 20,
+                        step: 1,
+                    },
+                    defaultValue: this.labelFontSize,
+                    onChange: () => {
+                        this.updateMonitorStyle();
+                    },
+                };
+                this.settingsValueFontSize = {
+                    id: this.valueFontSizeId,
+                    name: this.translate('Number Font Size'),
+                    category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'fontsize'],
+                    tooltip: this.translate('desc.Number font size'),
+                    type: 'slider',
+                    attrs: {
+                        min: 6,
+                        max: 20,
+                        step: 1,
+                    },
+                    defaultValue: this.valueFontSize,
+                    onChange: () => {
+                        this.updateMonitorStyle();
+                    },
+                };
+                this.settingsTextOpacity = {
+                    id: this.textOpacityId,
+                    name: this.translate('Text Opacity'),
+                    category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'opacity'],
+                    tooltip: this.translate('desc.Text opacity'),
+                    type: 'slider',
+                    attrs: {
+                        min: 0,
+                        max: 100,
+                        step: 1,
+                    },
+                    defaultValue: this.textOpacity,
+                    onChange: () => {
+                        this.updateMonitorStyle();
                     },
                 };
             }
@@ -323,8 +435,8 @@ class UsageMonitorMonitor {
             value: () => {
                 this.monitorCPUElement = {
                     id: 'UsageMonitor.ShowCpu',
-                    name: this.translate('CPU Usage'),
-                    category: [this.translate('UsageMonitor'), this.translate('Hardware'), 'Cpu'],
+                    name: this.translate('Overall Usage'),
+                    category: [this.translate('UsageMonitor'), `Cpu 0 - ${this.cpuName}`, 'Cpu'],
                     type: 'boolean',
                     label: this.translate('CPU'),
                     symbol: '%',
@@ -340,6 +452,32 @@ class UsageMonitorMonitor {
                 };
             }
         });
+        Object.defineProperty(this, "createSettingsCPUTemp", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: () => {
+                this.monitorCPUTempElement = {
+                    id: 'UsageMonitor.ShowCpuTemp',
+                    name: this.translate('CPU') + ' ' + this.translate('Temperature'),
+                    category: [this.translate('UsageMonitor'), `Cpu 0 - ${this.cpuName}`, 'Temperature'],
+                    type: 'boolean',
+                    label: this.translate('CPU') + ' ' + this.translate('Temperature'),
+                    symbol: '℃',
+                    defaultValue: false,
+                    htmlMonitorRef: undefined,
+                    htmlMonitorSliderRef: undefined,
+                    htmlMonitorLabelRef: undefined,
+                    cssColor: Colors.TEMP_START,
+                    cssColorFinal: Colors.TEMP_END,
+                    onChange: async (value) => {
+                        await this.updateServer({ switchCPUTemp: value });
+                        this.updateWidget(this.monitorCPUTempElement);
+                    },
+                };
+                app.ui.settings.addSetting(this.monitorCPUTempElement);
+            }
+        });
         Object.defineProperty(this, "createSettingsRAM", {
             enumerable: true,
             configurable: true,
@@ -347,7 +485,7 @@ class UsageMonitorMonitor {
             value: () => {
                 this.monitorRAMElement = {
                     id: 'UsageMonitor.ShowRam',
-                    name: this.translate('RAM Used'),
+                    name: this.translate('RAM') + ' ' + this.translate('Usage'),
                     category: [this.translate('UsageMonitor'), this.translate('Hardware'), 'Ram'],
                     type: 'boolean',
                     label: this.translate('RAM'),
@@ -377,7 +515,7 @@ class UsageMonitorMonitor {
                 label += moreThanOneGPU ? index : '';
                 const monitorGPUNElement = {
                     id: 'UsageMonitor.ShowGpuUsage' + convertNumberToPascalCase(index),
-                    name: this.translate('Usage'),
+                    name: this.translate('Overall Usage'),
                     category: [this.translate('UsageMonitor'), `GPU ${index} - ${name}`, 'Usage'],
                     type: 'boolean',
                     label,
@@ -474,7 +612,7 @@ class UsageMonitorMonitor {
             value: () => {
                 this.monitorHDDElement = {
                     id: 'UsageMonitor.ShowHdd',
-                    name: this.translate('Show Storage Used'),
+                    name: this.translate('Show Storage') + ' ' + this.translate('Usage'),
                     category: [this.translate('UsageMonitor'), this.translate('Show Storage'), 'Show'],
                     type: 'boolean',
                     label: this.translate('Storage'),
@@ -510,6 +648,9 @@ class UsageMonitorMonitor {
                 app.ui.settings.addSetting(this.settingsRate);
                 app.ui.settings.addSetting(this.settingsMonitorHeight);
                 app.ui.settings.addSetting(this.settingsMonitorWidth);
+                app.ui.settings.addSetting(this.settingsLabelFontSize);
+                app.ui.settings.addSetting(this.settingsValueFontSize);
+                app.ui.settings.addSetting(this.settingsTextOpacity);
                 app.ui.settings.addSetting(this.monitorRAMElement);
                 app.ui.settings.addSetting(this.monitorCPUElement);
                 void this.getHDDsFromServer().then((data) => {
@@ -539,9 +680,23 @@ class UsageMonitorMonitor {
                 this.monitorUI.orderMonitors();
                 this.updateAllWidget();
                 this.moveMonitor(this.menuDisplayOption);
+                this.updateMonitorStyle();
+            }
+        });
+        Object.defineProperty(this, "updateMonitorStyle", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: () => {
+                if (!this.monitorUI) {
+                    return;
+                }
                 const w = app.extensionManager.setting.get(this.monitorWidthId);
                 const h = app.extensionManager.setting.get(this.monitorHeightId);
-                this.monitorUI.updateMonitorSize(w, h);
+                const labelFontSize = app.extensionManager.setting.get(this.labelFontSizeId);
+                const valueFontSize = app.extensionManager.setting.get(this.valueFontSizeId);
+                const textOpacity = app.extensionManager.setting.get(this.textOpacityId);
+                this.monitorUI.updateMonitorStyle(w, h, labelFontSize, valueFontSize, textOpacity);
             }
         });
         Object.defineProperty(this, "updateDisplay", {
@@ -583,6 +738,7 @@ class UsageMonitorMonitor {
             writable: true,
             value: () => {
                 this.updateWidget(this.monitorCPUElement);
+                this.updateWidget(this.monitorCPUTempElement);
                 this.updateWidget(this.monitorRAMElement);
                 this.updateWidget(this.monitorHDDElement);
                 this.monitorGPUSettings.forEach((monitorSettings) => {
@@ -655,6 +811,22 @@ class UsageMonitorMonitor {
                 return this.getDataFromServer('GPU');
             }
         });
+        Object.defineProperty(this, "getCPUFromServer", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: async () => {
+                const resp = await api.fetchApi('/usagemonitor/monitor/CPU', {
+                    cache: 'no-store',
+                });
+                if (resp.status === 200) {
+                    const data = await resp.json();
+                    if (data?.name) {
+                        this.cpuName = data.name;
+                    }
+                }
+            }
+        });
         Object.defineProperty(this, "getDataFromServer", {
             enumerable: true,
             configurable: true,
@@ -684,10 +856,18 @@ class UsageMonitorMonitor {
                 catch (error) {
                     console.error('UsageMonitor: failed to load translations', error);
                 }
+                try {
+                    await this.getCPUFromServer();
+                }
+                catch (error) {
+                    console.error('UsageMonitor: failed to load CPU name', error);
+                }
                 this.createSettingsRate();
                 this.createSettingsMonitorHeight();
                 this.createSettingsMonitorWidth();
+                this.createSettingsFontSize();
                 this.createSettingsCPU();
+                this.createSettingsCPUTemp();
                 this.createSettingsRAM();
                 this.createSettingsHDD();
                 this.createSettings();
@@ -698,7 +878,7 @@ class UsageMonitorMonitor {
                 });
                 this.usagemonitorButtonGroup = new ComfyButtonGroup();
                 app.menu?.settingsGroup.element.before(this.usagemonitorButtonGroup.element);
-                this.monitorUI = new MonitorUI(this.usagemonitorButtonGroup.element, this.monitorCPUElement, this.monitorRAMElement, this.monitorHDDElement, this.monitorGPUSettings, this.monitorVRAMSettings, this.monitorTemperatureSettings, currentRate, this.translate);
+                this.monitorUI = new MonitorUI(this.usagemonitorButtonGroup.element, this.monitorCPUElement, this.monitorRAMElement, this.monitorHDDElement, this.monitorCPUTempElement, this.monitorGPUSettings, this.monitorVRAMSettings, this.monitorTemperatureSettings, currentRate, this.translate);
                 this.updateDisplay(this.menuDisplayOption);
                 this.registerListeners();
             }

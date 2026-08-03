@@ -1,5 +1,4 @@
 import { app, api, ComfyButtonGroup } from './comfy/index.js';
-import { commonPrefix } from './common.js';
 import { MonitorUI } from './monitorUI.js';
 import { Colors } from './styles.js';
 import { convertNumberToPascalCase } from './utils.js';
@@ -19,7 +18,6 @@ enum MenuDisplayOptions {
 
 class UsageMonitorMonitor {
   readonly idExtensionName = 'UsageMonitor.monitor';
-  private readonly menuPrefix = commonPrefix;
   private menuDisplayOption: MenuDisplayOptions = MenuDisplayOptions.Disabled;
   private usagemonitorButtonGroup: ComfyButtonGroup = null;
 
@@ -36,6 +34,9 @@ class UsageMonitorMonitor {
   private monitorTemperatureSettings: TMonitorSettings[] = [];
 
   private monitorUI: MonitorUI;
+  private monitorCPUTempElement: TMonitorSettings;
+
+  private cpuName = 'Unknown CPU';
 
   private translations: Record<string, string> = {};
 
@@ -87,6 +88,15 @@ class UsageMonitorMonitor {
   private readonly monitorWidth = 60;
   private readonly monitorHeightId = 'UsageMonitor.MonitorHeight';
   private readonly monitorHeight = 30;
+  private readonly labelFontSizeId = 'UsageMonitor.LabelFontSize';
+  private readonly labelFontSize = 10;
+  private readonly valueFontSizeId = 'UsageMonitor.ValueFontSize';
+  private readonly valueFontSize = 10;
+  private readonly textOpacityId = 'UsageMonitor.TextOpacity';
+  private readonly textOpacity = 100;
+  private settingsLabelFontSize: TMonitorSettings;
+  private settingsValueFontSize: TMonitorSettings;
+  private settingsTextOpacity: TMonitorSettings;
 
   // NO POSIBLE TO IMPLEMENT INSIDE THE PANEL
   // createSettingsMonitorPosition = (): void => {
@@ -120,7 +130,7 @@ class UsageMonitorMonitor {
   createSettingsRate = (): void => {
     this.settingsRate = {
       id: 'UsageMonitor.RefreshRate',
-      name: this.translate('Refresh per second'),
+      name: this.translate('Refresh interval'),
       category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'refresh'],
       tooltip: this.translate('desc.Refresh interval'),
       type: 'slider',
@@ -153,6 +163,7 @@ class UsageMonitorMonitor {
 
         const data = {
           cpu_utilization: 0,
+          cpu_temperature: 0,
           device: 'cpu',
 
           gpus: [
@@ -207,8 +218,7 @@ class UsageMonitorMonitor {
           return;
         }
 
-        const h = app.extensionManager.setting.get(this.monitorHeightId);
-        this.monitorUI?.updateMonitorSize(valueNumber, h);
+        this.updateMonitorStyle();
       },
     };
   };
@@ -240,8 +250,63 @@ class UsageMonitorMonitor {
           return;
         }
 
-        const w = await app.extensionManager.setting.get(this.monitorWidthId);
-        this.monitorUI?.updateMonitorSize(w, valueNumber);
+        this.updateMonitorStyle();
+      },
+    };
+  };
+
+  createSettingsFontSize = (): void => {
+    this.settingsLabelFontSize = {
+      id: this.labelFontSizeId,
+      name: this.translate('Label Font Size'),
+      category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'fontsize'],
+      tooltip: this.translate('desc.Label font size'),
+      type: 'slider',
+      attrs: {
+        min: 6,
+        max: 20,
+        step: 1,
+      },
+      defaultValue: this.labelFontSize,
+      // @ts-ignore
+      onChange: (): void => {
+        this.updateMonitorStyle();
+      },
+    };
+
+    this.settingsValueFontSize = {
+      id: this.valueFontSizeId,
+      name: this.translate('Number Font Size'),
+      category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'fontsize'],
+      tooltip: this.translate('desc.Number font size'),
+      type: 'slider',
+      attrs: {
+        min: 6,
+        max: 20,
+        step: 1,
+      },
+      defaultValue: this.valueFontSize,
+      // @ts-ignore
+      onChange: (): void => {
+        this.updateMonitorStyle();
+      },
+    };
+
+    this.settingsTextOpacity = {
+      id: this.textOpacityId,
+      name: this.translate('Text Opacity'),
+      category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'opacity'],
+      tooltip: this.translate('desc.Text opacity'),
+      type: 'slider',
+      attrs: {
+        min: 0,
+        max: 100,
+        step: 1,
+      },
+      defaultValue: this.textOpacity,
+      // @ts-ignore
+      onChange: (): void => {
+        this.updateMonitorStyle();
       },
     };
   };
@@ -250,8 +315,8 @@ class UsageMonitorMonitor {
     // CPU Variables
     this.monitorCPUElement = {
       id: 'UsageMonitor.ShowCpu',
-      name: this.translate('CPU Usage'),
-      category: [this.translate('UsageMonitor'), this.translate('Hardware'), 'Cpu'],
+      name: this.translate('Overall Usage'),
+      category: [this.translate('UsageMonitor'), `Cpu 0 - ${this.cpuName}`, 'Cpu'],
       type: 'boolean',
       label: this.translate('CPU'),
       symbol: '%',
@@ -268,11 +333,35 @@ class UsageMonitorMonitor {
     };
   };
 
+  createSettingsCPUTemp = (): void => {
+    this.monitorCPUTempElement = {
+      id: 'UsageMonitor.ShowCpuTemp',
+      name: this.translate('CPU') + ' ' + this.translate('Temperature'),
+      category: [this.translate('UsageMonitor'), `Cpu 0 - ${this.cpuName}`, 'Temperature'],
+      type: 'boolean',
+      label: this.translate('CPU') + ' ' + this.translate('Temperature'),
+      symbol: '℃',
+      defaultValue: false,
+      htmlMonitorRef: undefined,
+      htmlMonitorSliderRef: undefined,
+      htmlMonitorLabelRef: undefined,
+      cssColor: Colors.TEMP_START,
+      cssColorFinal: Colors.TEMP_END,
+      // @ts-ignore
+      onChange: async(value: boolean): Promise<void> => {
+        await this.updateServer({switchCPUTemp: value});
+        this.updateWidget(this.monitorCPUTempElement);
+      },
+    };
+
+    app.ui.settings.addSetting(this.monitorCPUTempElement);
+  };
+
   createSettingsRAM = (): void => {
     // RAM Variables
     this.monitorRAMElement = {
       id: 'UsageMonitor.ShowRam',
-      name: this.translate('RAM Used'),
+      name: this.translate('RAM') + ' ' + this.translate('Usage'),
       category: [this.translate('UsageMonitor'), this.translate('Hardware'), 'Ram'],
       type: 'boolean',
       label: this.translate('RAM'),
@@ -301,7 +390,7 @@ class UsageMonitorMonitor {
 
     const monitorGPUNElement: TMonitorSettings = {
       id: 'UsageMonitor.ShowGpuUsage' + convertNumberToPascalCase(index),
-      name: this.translate('Usage'),
+      name: this.translate('Overall Usage'),
       category: [this.translate('UsageMonitor'), `GPU ${index} - ${name}`, 'Usage'],
       type: 'boolean',
       label,
@@ -399,7 +488,7 @@ class UsageMonitorMonitor {
     // HDD Variables
     this.monitorHDDElement = {
       id: 'UsageMonitor.ShowHdd',
-      name: this.translate('Show Storage Used'),
+      name: this.translate('Show Storage') + ' ' + this.translate('Usage'),
       category: [this.translate('UsageMonitor'), this.translate('Show Storage'), 'Show'],
       type: 'boolean',
       label: this.translate('Storage'),
@@ -435,6 +524,9 @@ class UsageMonitorMonitor {
     app.ui.settings.addSetting(this.settingsRate);
     app.ui.settings.addSetting(this.settingsMonitorHeight);
     app.ui.settings.addSetting(this.settingsMonitorWidth);
+    app.ui.settings.addSetting(this.settingsLabelFontSize);
+    app.ui.settings.addSetting(this.settingsValueFontSize);
+    app.ui.settings.addSetting(this.settingsTextOpacity);
     // app.ui.settings.addSetting(this.settingsMonitorPosition);
     app.ui.settings.addSetting(this.monitorRAMElement);
     app.ui.settings.addSetting(this.monitorCPUElement);
@@ -467,9 +559,19 @@ class UsageMonitorMonitor {
     this.updateAllWidget();
     this.moveMonitor(this.menuDisplayOption);
 
+    this.updateMonitorStyle();
+  };
+
+  updateMonitorStyle = (): void => {
+    if (!this.monitorUI) {
+      return;
+    }
     const w = app.extensionManager.setting.get(this.monitorWidthId);
     const h = app.extensionManager.setting.get(this.monitorHeightId);
-    this.monitorUI.updateMonitorSize(w, h);
+    const labelFontSize = app.extensionManager.setting.get(this.labelFontSizeId);
+    const valueFontSize = app.extensionManager.setting.get(this.valueFontSizeId);
+    const textOpacity = app.extensionManager.setting.get(this.textOpacityId);
+    this.monitorUI.updateMonitorStyle(w, h, labelFontSize, valueFontSize, textOpacity);
   };
 
   updateDisplay = (value: MenuDisplayOptions): void => {
@@ -514,6 +616,7 @@ class UsageMonitorMonitor {
 
   updateAllWidget = (): void => {
     this.updateWidget(this.monitorCPUElement);
+    this.updateWidget(this.monitorCPUTempElement);
     this.updateWidget(this.monitorRAMElement);
     this.updateWidget(this.monitorHDDElement);
 
@@ -571,6 +674,18 @@ class UsageMonitorMonitor {
     return this.getDataFromServer<TGpuName>('GPU');
   };
 
+  getCPUFromServer = async (): Promise<void> => {
+    const resp = await api.fetchApi('/usagemonitor/monitor/CPU', {
+      cache: 'no-store',
+    });
+    if (resp.status === 200) {
+      const data = await resp.json();
+      if (data?.name) {
+        this.cpuName = data.name;
+      }
+    }
+  };
+
   getDataFromServer = async <T>(what: string): Promise<T[]> => {
     const resp = await api.fetchApi(`/usagemonitor/monitor/${what}`, {
       method: 'GET',
@@ -592,11 +707,19 @@ class UsageMonitorMonitor {
     } catch (error) {
       console.error('UsageMonitor: failed to load translations', error);
     }
+    // Load the CPU name before creating the CPU settings.
+    try {
+      await this.getCPUFromServer();
+    } catch (error) {
+      console.error('UsageMonitor: failed to load CPU name', error);
+    }
     // this.createSettingsMonitorPosition();
     this.createSettingsRate();
     this.createSettingsMonitorHeight();
     this.createSettingsMonitorWidth();
+    this.createSettingsFontSize();
     this.createSettingsCPU();
+    this.createSettingsCPUTemp();
     this.createSettingsRAM();
     this.createSettingsHDD();
     this.createSettings();
@@ -618,6 +741,7 @@ class UsageMonitorMonitor {
       this.monitorCPUElement,
       this.monitorRAMElement,
       this.monitorHDDElement,
+      this.monitorCPUTempElement,
       this.monitorGPUSettings,
       this.monitorVRAMSettings,
       this.monitorTemperatureSettings,
