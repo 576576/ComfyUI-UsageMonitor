@@ -84,9 +84,9 @@ class CGPUInfo:
                     self.amdsmiLoaded = True
                     logger.info('amdsmi (AMD) initialized.')
                 except ImportError as e:
-                    logger.error('amdsmi is not installed. ' + str(e))
+                    logger.error('amdsmi is not installed, falling back to next backend. ' + str(e))
                 except Exception as e:
-                    logger.error('Could not init amdsmi (AMD). ' + str(e))
+                    logger.error('Could not init amdsmi (AMD), falling back to next backend. ' + str(e))
 
         self.anygpuLoaded = self.pynvmlLoaded or self.amdsmiLoaded or self.jtopLoaded
 
@@ -218,25 +218,42 @@ class CGPUInfo:
         }
 
     def deviceGetCount(self):
+        """Number of detected GPUs. Falls back to the next backend when the current one fails."""
         if self.pynvmlLoaded:
-            return self.pynvml.nvmlDeviceGetCount()
-        elif self.amdsmiLoaded:
-            return len(self.amdsmi.amdsmi_get_processor_handles())
-        elif self.jtopLoaded:
+            try:
+                return self.pynvml.nvmlDeviceGetCount()
+            except Exception as e:
+                logger.error('nvidia-ml-py (pynvml) is not available, falling back to next backend. ' + str(e))
+                self.pynvmlLoaded = False
+        if self.amdsmiLoaded:
+            try:
+                return len(self.amdsmi.amdsmi_get_processor_handles())
+            except Exception as e:
+                logger.error('amdsmi is not available, falling back to next backend. ' + str(e))
+                self.amdsmiLoaded = False
+        if self.jtopLoaded:
             # For Jetson devices, we assume there's one GPU
             return 1
-        else:
-            return 0
+        self.anygpuLoaded = self.pynvmlLoaded or self.amdsmiLoaded or self.jtopLoaded
+        return 0
 
     def deviceGetHandleByIndex(self, index):
+        """Handle for a GPU index. Falls back to the next backend when the current one fails."""
         if self.pynvmlLoaded:
-            return self.pynvml.nvmlDeviceGetHandleByIndex(index)
-        elif self.amdsmiLoaded:
-            return self.amdsmi.amdsmi_get_processor_handles()[index]
-        elif self.jtopLoaded:
+            try:
+                return self.pynvml.nvmlDeviceGetHandleByIndex(index)
+            except Exception as e:
+                logger.error('nvidia-ml-py (pynvml) is not available, falling back to next backend. ' + str(e))
+                self.pynvmlLoaded = False
+        if self.amdsmiLoaded:
+            try:
+                return self.amdsmi.amdsmi_get_processor_handles()[index]
+            except Exception as e:
+                logger.error('amdsmi is not available, falling back to next backend. ' + str(e))
+                self.amdsmiLoaded = False
+        if self.jtopLoaded:
             return index  # On Jetson, index acts as handle
-        else:
-            return 0
+        return 0
 
     def deviceGetName(self, deviceHandle, deviceIndex):
         if self.pynvmlLoaded:
@@ -249,9 +266,9 @@ class CGPUInfo:
                 except AttributeError:
                     pass
 
-            except UnicodeDecodeError as e:
-                gpuName = 'Unknown GPU (decoding error)'
-                logger.error(f"UnicodeDecodeError: {e}")
+            except Exception as e:
+                gpuName = 'Unknown GPU'
+                logger.error(f"Could not get GPU name: {e}")
 
             return gpuName
         elif self.amdsmiLoaded:
@@ -278,7 +295,11 @@ class CGPUInfo:
 
     def systemGetDriverVersion(self):
         if self.pynvmlLoaded:
-            return f'NVIDIA Driver: {self.pynvml.nvmlSystemGetDriverVersion()}'
+            try:
+                return f'NVIDIA Driver: {self.pynvml.nvmlSystemGetDriverVersion()}'
+            except Exception as e:
+                logger.error('Could not get NVIDIA driver version. ' + str(e))
+                return 'NVIDIA Driver: unknown'
         elif self.amdsmiLoaded:
             try:
                 handles = self.amdsmi.amdsmi_get_processor_handles()
@@ -297,7 +318,11 @@ class CGPUInfo:
 
     def deviceGetUtilizationRates(self, deviceHandle):
         if self.pynvmlLoaded:
-            return self.pynvml.nvmlDeviceGetUtilizationRates(deviceHandle).gpu
+            try:
+                return self.pynvml.nvmlDeviceGetUtilizationRates(deviceHandle).gpu
+            except Exception as e:
+                logger.error('Could not get GPU utilization. ' + str(e))
+                return -1
         elif self.amdsmiLoaded:
             try:
                 activity = self.amdsmi.amdsmi_get_gpu_activity(deviceHandle)
@@ -321,8 +346,12 @@ class CGPUInfo:
 
     def deviceGetMemoryInfo(self, deviceHandle):
         if self.pynvmlLoaded:
-            mem = self.pynvml.nvmlDeviceGetMemoryInfo(deviceHandle)
-            return {'total': mem.total, 'used': mem.used}
+            try:
+                mem = self.pynvml.nvmlDeviceGetMemoryInfo(deviceHandle)
+                return {'total': mem.total, 'used': mem.used}
+            except Exception as e:
+                logger.error('Could not get GPU memory info. ' + str(e))
+                return {'total': 0, 'used': 0}
         elif self.amdsmiLoaded:
             try:
                 vram = self.amdsmi.amdsmi_get_gpu_vram_usage(deviceHandle)
@@ -344,7 +373,11 @@ class CGPUInfo:
 
     def deviceGetTemperature(self, deviceHandle):
         if self.pynvmlLoaded:
-            return self.pynvml.nvmlDeviceGetTemperature(deviceHandle, self.pynvml.NVML_TEMPERATURE_GPU)
+            try:
+                return self.pynvml.nvmlDeviceGetTemperature(deviceHandle, self.pynvml.NVML_TEMPERATURE_GPU)
+            except Exception as e:
+                logger.error('Could not get GPU temperature. ' + str(e))
+                return -1
         elif self.amdsmiLoaded:
             try:
                 temp = self.amdsmi.amdsmi_get_temp_metric(
@@ -371,6 +404,11 @@ class CGPUInfo:
             return 0
 
     def close(self):
+        if self.pynvmlLoaded:
+            try:
+                self.pynvml.nvmlShutdown()
+            except Exception as e:
+                logger.error('Could not shut down nvidia-ml-py (pynvml). ' + str(e))
         if self.amdsmiLoaded:
             try:
                 self.amdsmi.amdsmi_shut_down()

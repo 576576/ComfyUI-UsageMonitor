@@ -1,5 +1,4 @@
-import { ProgressBarUIBase } from './progressBarUIBase.js';
-export declare class MonitorUI extends ProgressBarUIBase {
+export declare class MonitorUI {
     rootElement: HTMLElement;
     private monitorCPUElement;
     private monitorRAMElement;
@@ -8,6 +7,7 @@ export declare class MonitorUI extends ProgressBarUIBase {
     private monitorVRAMSettings;
     private monitorTemperatureSettings;
     private currentRate;
+    protected htmlClassMonitor: string;
     lastMonitor: number;
     styleSheet: HTMLStyleElement;
     maxVRAMUsed: Record<number, number>;

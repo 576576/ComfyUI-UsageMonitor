@@ -3,7 +3,13 @@ import { commonPrefix } from './common.js';
 import { MonitorUI } from './monitorUI.js';
 import { Colors } from './styles.js';
 import { convertNumberToPascalCase } from './utils.js';
-import { ComfyKeyMenuDisplayOption, MenuDisplayOptions } from './progressBarUIBase.js';
+
+const ComfyKeyMenuDisplayOption = 'Comfy.UseNewMenu';
+enum MenuDisplayOptions {
+  'Disabled' = 'Disabled',
+  'Top' = 'Top',
+  'Bottom' = 'Bottom',
+}
 
 // enum MonitorPosition {
 //   'Top' = 'Top',

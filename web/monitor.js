@@ -3,7 +3,13 @@ import { commonPrefix } from './common.js';
 import { MonitorUI } from './monitorUI.js';
 import { Colors } from './styles.js';
 import { convertNumberToPascalCase } from './utils.js';
-import { ComfyKeyMenuDisplayOption, MenuDisplayOptions } from './progressBarUIBase.js';
+const ComfyKeyMenuDisplayOption = 'Comfy.UseNewMenu';
+var MenuDisplayOptions;
+(function (MenuDisplayOptions) {
+    MenuDisplayOptions["Disabled"] = "Disabled";
+    MenuDisplayOptions["Top"] = "Top";
+    MenuDisplayOptions["Bottom"] = "Bottom";
+})(MenuDisplayOptions || (MenuDisplayOptions = {}));
 class UsageMonitorMonitor {
     constructor() {
         Object.defineProperty(this, "idExtensionName", {

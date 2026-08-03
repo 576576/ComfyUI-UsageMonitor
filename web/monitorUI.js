@@ -1,9 +1,7 @@
 import { app } from './comfy/index.js';
-import { ProgressBarUIBase } from './progressBarUIBase.js';
 import { createStyleSheet, formatBytes } from './utils.js';
-export class MonitorUI extends ProgressBarUIBase {
+export class MonitorUI {
     constructor(rootElement, monitorCPUElement, monitorRAMElement, monitorHDDElement, monitorGPUSettings, monitorVRAMSettings, monitorTemperatureSettings, currentRate) {
-        super('usagemonitor-monitors-root', rootElement);
         Object.defineProperty(this, "rootElement", {
             enumerable: true,
             configurable: true,
@@ -51,6 +49,12 @@ export class MonitorUI extends ProgressBarUIBase {
             configurable: true,
             writable: true,
             value: currentRate
+        });
+        Object.defineProperty(this, "htmlClassMonitor", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: 'usagemonitor-monitors-container'
         });
         Object.defineProperty(this, "lastMonitor", {
             enumerable: true,
@@ -296,6 +300,11 @@ export class MonitorUI extends ProgressBarUIBase {
                 this.maxVRAMUsed = {};
             }
         });
+        if (this.rootElement.children.length === 0) {
+            this.rootElement.setAttribute('id', 'usagemonitor-monitors-root');
+            this.rootElement.classList.add(this.htmlClassMonitor);
+            this.rootElement.classList.add(this.constructor.name);
+        }
         this.createDOM();
         this.styleSheet = createStyleSheet('usagemonitor-monitors-size');
     }

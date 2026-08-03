@@ -1,14 +1,14 @@
 import { app } from './comfy/index.js';
-import { ProgressBarUIBase } from './progressBarUIBase.js';
 import { createStyleSheet, formatBytes } from './utils.js';
 
-export class MonitorUI extends ProgressBarUIBase {
+export class MonitorUI {
+  protected htmlClassMonitor = 'usagemonitor-monitors-container';
   lastMonitor = 1; // just for order on monitors section
   styleSheet: HTMLStyleElement;
   maxVRAMUsed: Record<number, number> = {}; // Add this to track max VRAM per GPU
 
   constructor(
-    public override rootElement: HTMLElement,
+    public rootElement: HTMLElement,
     private monitorCPUElement: TMonitorSettings,
     private monitorRAMElement: TMonitorSettings,
     private monitorHDDElement: TMonitorSettings,
@@ -17,7 +17,12 @@ export class MonitorUI extends ProgressBarUIBase {
     private monitorTemperatureSettings: TMonitorSettings[],
     private currentRate: number,
   ) {
-    super('usagemonitor-monitors-root', rootElement);
+    // Initialize the root container (id + classes)
+    if (this.rootElement.children.length === 0) {
+      this.rootElement.setAttribute('id', 'usagemonitor-monitors-root');
+      this.rootElement.classList.add(this.htmlClassMonitor);
+      this.rootElement.classList.add(this.constructor.name);
+    }
     this.createDOM();
 
     this.styleSheet = createStyleSheet('usagemonitor-monitors-size');
