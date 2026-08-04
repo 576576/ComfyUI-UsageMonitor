@@ -12,23 +12,39 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 cd "$REPO_ROOT" || { echo "Failed to cd to repo root"; exit 1; }
 
 # Resolve a Python interpreter (the scripts only use the standard library).
+# GitHub Desktop runs hooks in a clean environment (no user PATH), so we also
+# probe well-known install locations. Prefer an optional per-user override
+# stored in git config (never committed to the repo):
+#   git config --global hooks.python "C:/Python312/python.exe"
 PYTHON=""
-if command -v python >/dev/null 2>&1; then
+CONFIG_PY="$(git config --get hooks.python 2>/dev/null)"
+if [ -n "$CONFIG_PY" ] && [ -f "$CONFIG_PY" ]; then
+    PYTHON="$CONFIG_PY"
+elif command -v python >/dev/null 2>&1; then
     PYTHON="python"
 elif command -v python3 >/dev/null 2>&1; then
     PYTHON="python3"
 elif command -v py >/dev/null 2>&1; then
     PYTHON="py"
 else
-    # Fall back to common Windows install locations.
-    for p in "$LOCALAPPDATA/Programs/Python"/Python*/python.exe \
-             "$USERPROFILE/miniconda3/python.exe" \
-             "$USERPROFILE/Anaconda3/python.exe" \
-             /c/Python*/python.exe; do
-        if [ -f "$p" ]; then
-            PYTHON="$(cygpath -m "$p" 2>/dev/null || echo "$p")"
-            break
-        fi
+    # Fall back to common Windows install locations derived from environment
+    # variables only (no hard-coded user name). HOME/USERPROFILE may be unset
+    # in some Git GUIs, so also probe /c/Users/$USERNAME.
+    for base in "$LOCALAPPDATA/Programs/Python" \
+                "$HOME" \
+                "$USERPROFILE" \
+                "$USERPROFILE/AppData/Local/Programs/Python" \
+                "/c/Users/$USERNAME"; do
+        [ -n "$base" ] || continue
+        for p in "$base"/Python*/python.exe \
+                 "$base"/miniconda3/python.exe \
+                 "$base"/Anaconda3/python.exe \
+                 "$base"/python.exe; do
+            if [ -f "$p" ]; then
+                PYTHON="$(cygpath -m "$p" 2>/dev/null || echo "$p")"
+                break 2
+            fi
+        done
     done
 fi
 

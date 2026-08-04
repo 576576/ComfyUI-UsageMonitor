@@ -1,12 +1,13 @@
 [project]
 name = "ComfyUI-UsageMonitor"
 description = "With this suit, you can see the resources monitor."
-version = "1.32.0"
+version = "1.32.1"
 license = { file = "LICENSE" }
 dependencies = ["torch", "nvidia-ml-py", "adlxpybind; sys_platform == 'win32'", "py-cpuinfo", "psutil"]
 
 classifiers = [
   "Operating System :: OS Independent",
+  "Environment :: CPU",
   "Environment :: GPU :: NVIDIA CUDA",
   "Environment :: GPU :: AMD ROCm"
 ]
