@@ -531,7 +531,7 @@ class UsageMonitorMonitor {
                     name: this.translate('RAM') + this.translate('Usage2'),
                     category: [this.translate('UsageMonitor'), this.translate('Hardware'), 'Ram'],
                     type: 'boolean',
-                    label: this.translate('RAM'),
+                    label: 'RAM',
                     symbol: '%',
                     defaultValue: true,
                     htmlMonitorRef: undefined,
