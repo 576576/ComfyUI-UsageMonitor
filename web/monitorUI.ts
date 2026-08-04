@@ -56,6 +56,8 @@ export class MonitorUI {
       // @ts-ignore
       this.monitorCPUElement.htmlMonitorRef.style.order = '' + this.lastMonitor++;
       // @ts-ignore
+      this.monitorCPUTempElement.htmlMonitorRef.style.order = '' + this.lastMonitor++;
+      // @ts-ignore
       this.monitorRAMElement.htmlMonitorRef.style.order = '' + this.lastMonitor++;
       // @ts-ignore
       this.monitorGPUSettings.forEach((_monitorSettings, index) => {

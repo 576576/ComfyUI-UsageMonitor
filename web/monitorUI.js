@@ -119,6 +119,7 @@ export class MonitorUI {
             value: () => {
                 try {
                     this.monitorCPUElement.htmlMonitorRef.style.order = '' + this.lastMonitor++;
+                    this.monitorCPUTempElement.htmlMonitorRef.style.order = '' + this.lastMonitor++;
                     this.monitorRAMElement.htmlMonitorRef.style.order = '' + this.lastMonitor++;
                     this.monitorGPUSettings.forEach((_monitorSettings, index) => {
                         this.monitorGPUSettings[index].htmlMonitorRef.style.order = '' + this.lastMonitor++;

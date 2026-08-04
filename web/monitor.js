@@ -575,7 +575,7 @@ class UsageMonitorMonitor {
                     name: this.translate('Temperature'),
                     category: [this.translate('UsageMonitor'), `Cpu 0 - ${this.cpuName}`, 'Temperature'],
                     type: 'boolean',
-                    label: this.translate('Temperature'),
+                    label: 'Temp C',
                     symbol: '°C',
                     defaultValue: false,
                     htmlMonitorRef: undefined,
