@@ -267,7 +267,8 @@ class UsageMonitorMonitor {
                 this.settingsMonitorEnabled = {
                     id: this.monitorEnabledId,
                     name: this.translate('UsageMonitor'),
-                    category: [this.translate('UsageMonitor')],
+                    category: [this.translate('UsageMonitor'), this.translate('UsageMonitor')],
+                    sortOrder: 1000,
                     tooltip: this.translate('desc.Monitor enabled'),
                     type: 'boolean',
                     defaultValue: true,

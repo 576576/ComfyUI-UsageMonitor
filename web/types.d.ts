@@ -54,6 +54,7 @@ type TMonitorSettings = {
   type: 'boolean' | 'number' | 'string' | 'slider' | 'combo',
   defaultValue: boolean | number | string,
   data?: any,
+  sortOrder?: number,
   onChange: (value: boolean | number | string) => Promise<void>,
   htmlMonitorRef?: HTMLDivElement,
   htmlMonitorSliderRef?: HTMLDivElement,

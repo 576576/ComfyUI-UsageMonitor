@@ -134,7 +134,11 @@ class UsageMonitorMonitor {
     this.settingsMonitorEnabled = {
       id: this.monitorEnabledId,
       name: this.translate('UsageMonitor'),
-      category: [this.translate('UsageMonitor')],
+      // Two-element category so the '性能监视器' top-level node is NOT a leaf
+      // (a single-element category would move the whole group into 'Other').
+      category: [this.translate('UsageMonitor'), this.translate('UsageMonitor')],
+      // Keep this subgroup above all others (subgroups sort by max sortOrder).
+      sortOrder: 1000,
       tooltip: this.translate('desc.Monitor enabled'),
       type: 'boolean',
       defaultValue: true,
