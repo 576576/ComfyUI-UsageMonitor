@@ -266,10 +266,9 @@ class UsageMonitorMonitor {
             value: () => {
                 this.settingsMonitorEnabled = {
                     id: this.monitorEnabledId,
-                    name: this.translate('UsageMonitor'),
+                    name: this.translate('Master Switch'),
                     category: [this.translate('UsageMonitor'), this.translate('UsageMonitor')],
                     sortOrder: 1000,
-                    tooltip: this.translate('desc.Monitor enabled'),
                     type: 'boolean',
                     defaultValue: true,
                     onChange: async (value) => {
@@ -861,6 +860,9 @@ class UsageMonitorMonitor {
             configurable: true,
             writable: true,
             value: (enabled) => {
+                if (this.usagemonitorButtonGroup?.element) {
+                    this.usagemonitorButtonGroup.element.style.display = enabled ? '' : 'none';
+                }
                 const lookup = this.getSettingsLookup();
                 if (!lookup) {
                     return;

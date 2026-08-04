@@ -1,5 +1,6 @@
 {
   "Refresh interval": "刷新间隔秒数",
+  "Master Switch": "总开关",
   "Capsule Width": "胶囊宽度",
   "Capsule Height": "胶囊高度",
   "desc": {
@@ -8,8 +9,7 @@
     "Capsule height": "胶囊在界面上的像素高度（仅顶部/底部界面）",
     "Label font size": "监控文字（如 CPU）的字体大小",
     "Number font size": "监控数字（如 5%）的字体大小",
-    "Text opacity": "监控文字的透明度（0-100%）",
-    "Monitor enabled": "启用或禁用性能监视器。关闭后，下方的设置将被隐藏。"
+    "Text opacity": "监控文字的透明度（0-100%）"
   },
   "Overall Usage": "总体利用率",
   "Usage2": "占用率",

@@ -133,13 +133,12 @@ class UsageMonitorMonitor {
   createSettingsMonitorEnabled = (): void => {
     this.settingsMonitorEnabled = {
       id: this.monitorEnabledId,
-      name: this.translate('UsageMonitor'),
+      name: this.translate('Master Switch'),
       // Two-element category so the '性能监视器' top-level node is NOT a leaf
       // (a single-element category would move the whole group into 'Other').
       category: [this.translate('UsageMonitor'), this.translate('UsageMonitor')],
       // Keep this subgroup above all others (subgroups sort by max sortOrder).
       sortOrder: 1000,
-      tooltip: this.translate('desc.Monitor enabled'),
       type: 'boolean',
       defaultValue: true,
       // @ts-ignore
@@ -711,6 +710,10 @@ class UsageMonitorMonitor {
   };
 
   setMonitorEnabled = (enabled: boolean): void => {
+    // Hide/show the monitor capsules (root element of all monitors).
+    if (this.usagemonitorButtonGroup?.element) {
+      this.usagemonitorButtonGroup.element.style.display = enabled ? '' : 'none';
+    }
     const lookup = this.getSettingsLookup();
     if (!lookup) {
       return;
