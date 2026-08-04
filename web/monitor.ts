@@ -97,11 +97,14 @@ class UsageMonitorMonitor {
   private readonly textOpacity = 0;
   private readonly textBoldId = 'UsageMonitor.TextBold';
   private readonly textBold = false;
+  private readonly hideNumberId = 'UsageMonitor.HideNumber';
+  private readonly hideNumber = false;
   private readonly monitorEnabledId = 'UsageMonitor.MonitorEnabled';
   private settingsLabelFontSize: TMonitorSettings;
   private settingsValueFontSize: TMonitorSettings;
   private settingsTextOpacity: TMonitorSettings;
   private settingsTextBold: TMonitorSettings;
+  private settingsHideNumber: TMonitorSettings;
   private settingsMonitorEnabled: TMonitorSettings;
   private originalSettingTypes: Record<string, string> = {};
 
@@ -352,7 +355,21 @@ class UsageMonitorMonitor {
       // @ts-ignore
       onChange: (value: boolean): void => {
         // Pass the new value directly; setting.get() may still return the old value here.
-        this.updateMonitorStyle(value);
+        this.updateMonitorStyle({textBold: value});
+      },
+    };
+  };
+
+  createSettingsHideNumber = (): void => {
+    this.settingsHideNumber = {
+      id: this.hideNumberId,
+      name: this.translate('Hide Number'),
+      category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'hidenumber'],
+      type: 'boolean',
+      defaultValue: this.hideNumber,
+      // @ts-ignore
+      onChange: (value: boolean): void => {
+        this.updateMonitorStyle({hideNumber: value});
       },
     };
   };
@@ -575,6 +592,7 @@ class UsageMonitorMonitor {
     app.ui.settings.addSetting(this.settingsTextBold);
     app.ui.settings.addSetting(this.settingsTextOpacity);
     app.ui.settings.addSetting(this.settingsLabelFontSize);
+    app.ui.settings.addSetting(this.settingsHideNumber);
     app.ui.settings.addSetting(this.settingsValueFontSize);
     // app.ui.settings.addSetting(this.settingsMonitorPosition);
     app.ui.settings.addSetting(this.monitorRAMElement);
@@ -621,7 +639,7 @@ class UsageMonitorMonitor {
     this.setMonitorEnabled(enabled);
   };
 
-  updateMonitorStyle = (textBoldOverride?: boolean): void => {
+  updateMonitorStyle = (overrides?: {textBold?: boolean, hideNumber?: boolean}): void => {
     if (!this.monitorUI) {
       return;
     }
@@ -630,10 +648,13 @@ class UsageMonitorMonitor {
     const labelFontSize = app.extensionManager.setting.get(this.labelFontSizeId);
     const valueFontSize = app.extensionManager.setting.get(this.valueFontSizeId);
     const textOpacity = app.extensionManager.setting.get(this.textOpacityId);
-    const textBold = textBoldOverride !== undefined
-      ? textBoldOverride
+    const textBold = overrides?.textBold !== undefined
+      ? overrides.textBold
       : Boolean(app.extensionManager.setting.get(this.textBoldId));
-    this.monitorUI.updateMonitorStyle(w, h, labelFontSize, valueFontSize, textOpacity, textBold);
+    const hideNumber = overrides?.hideNumber !== undefined
+      ? overrides.hideNumber
+      : Boolean(app.extensionManager.setting.get(this.hideNumberId));
+    this.monitorUI.updateMonitorStyle(w, h, labelFontSize, valueFontSize, textOpacity, textBold, hideNumber);
   };
 
   updateDisplay = (value: MenuDisplayOptions): void => {
@@ -845,6 +866,7 @@ class UsageMonitorMonitor {
     this.createSettingsMonitorWidth();
     this.createSettingsFontSize();
     this.createSettingsTextBold();
+    this.createSettingsHideNumber();
     this.createSettingsCPU();
     this.createSettingsCPUTemp();
     this.createSettingsRAM();

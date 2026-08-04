@@ -235,6 +235,18 @@ class UsageMonitorMonitor {
             writable: true,
             value: false
         });
+        Object.defineProperty(this, "hideNumberId", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: 'UsageMonitor.HideNumber'
+        });
+        Object.defineProperty(this, "hideNumber", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: false
+        });
         Object.defineProperty(this, "monitorEnabledId", {
             enumerable: true,
             configurable: true,
@@ -260,6 +272,12 @@ class UsageMonitorMonitor {
             value: void 0
         });
         Object.defineProperty(this, "settingsTextBold", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "settingsHideNumber", {
             enumerable: true,
             configurable: true,
             writable: true,
@@ -501,7 +519,24 @@ class UsageMonitorMonitor {
                     type: 'boolean',
                     defaultValue: this.textBold,
                     onChange: (value) => {
-                        this.updateMonitorStyle(value);
+                        this.updateMonitorStyle({ textBold: value });
+                    },
+                };
+            }
+        });
+        Object.defineProperty(this, "createSettingsHideNumber", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: () => {
+                this.settingsHideNumber = {
+                    id: this.hideNumberId,
+                    name: this.translate('Hide Number'),
+                    category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'hidenumber'],
+                    type: 'boolean',
+                    defaultValue: this.hideNumber,
+                    onChange: (value) => {
+                        this.updateMonitorStyle({ hideNumber: value });
                     },
                 };
             }
@@ -730,6 +765,7 @@ class UsageMonitorMonitor {
                 app.ui.settings.addSetting(this.settingsTextBold);
                 app.ui.settings.addSetting(this.settingsTextOpacity);
                 app.ui.settings.addSetting(this.settingsLabelFontSize);
+                app.ui.settings.addSetting(this.settingsHideNumber);
                 app.ui.settings.addSetting(this.settingsValueFontSize);
                 app.ui.settings.addSetting(this.monitorRAMElement);
                 app.ui.settings.addSetting(this.settingsHDD);
@@ -774,7 +810,7 @@ class UsageMonitorMonitor {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: (textBoldOverride) => {
+            value: (overrides) => {
                 if (!this.monitorUI) {
                     return;
                 }
@@ -783,10 +819,13 @@ class UsageMonitorMonitor {
                 const labelFontSize = app.extensionManager.setting.get(this.labelFontSizeId);
                 const valueFontSize = app.extensionManager.setting.get(this.valueFontSizeId);
                 const textOpacity = app.extensionManager.setting.get(this.textOpacityId);
-                const textBold = textBoldOverride !== undefined
-                    ? textBoldOverride
+                const textBold = overrides?.textBold !== undefined
+                    ? overrides.textBold
                     : Boolean(app.extensionManager.setting.get(this.textBoldId));
-                this.monitorUI.updateMonitorStyle(w, h, labelFontSize, valueFontSize, textOpacity, textBold);
+                const hideNumber = overrides?.hideNumber !== undefined
+                    ? overrides.hideNumber
+                    : Boolean(app.extensionManager.setting.get(this.hideNumberId));
+                this.monitorUI.updateMonitorStyle(w, h, labelFontSize, valueFontSize, textOpacity, textBold, hideNumber);
             }
         });
         Object.defineProperty(this, "updateDisplay", {
@@ -1046,6 +1085,7 @@ class UsageMonitorMonitor {
                 this.createSettingsMonitorWidth();
                 this.createSettingsFontSize();
                 this.createSettingsTextBold();
+                this.createSettingsHideNumber();
                 this.createSettingsCPU();
                 this.createSettingsCPUTemp();
                 this.createSettingsRAM();
