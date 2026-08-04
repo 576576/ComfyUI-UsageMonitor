@@ -20,6 +20,7 @@
       height: 12px;
       display: flex;
       align-items: center;
+      border-radius: 8px;
 
       .usagemonitor-text {
         width: 40px;
@@ -109,6 +110,9 @@
     position: relative;
     align-items: center;
     flex-direction: row;
+    /* Match the border-radius of other ComfyUI buttons (8px). */
+    border-radius: 8px;
+    overflow: hidden;
     /*width: 60px;*/
     /*height: 100%;*/
 
