@@ -581,6 +581,7 @@ class UsageMonitorMonitor {
       // @ts-ignore
       onChange: async(value: string): Promise<void> => {
         await this.updateServer({whichHDD: value});
+        this.updateHDDLabel(value);
       },
     };
   };
@@ -604,6 +605,7 @@ class UsageMonitorMonitor {
     void this.getHDDsFromServer().then((data: string[]): void => {
       // @ts-ignore
       this.settingsHDD.options = data;
+      this.updateHDDLabel();
     });
 
     app.ui.settings.addSetting(this.monitorCPUElement);
@@ -630,6 +632,7 @@ class UsageMonitorMonitor {
     this.moveMonitor(this.menuDisplayOption);
 
     this.updateMonitorStyle();
+    this.updateHDDLabel();
 
     const enabled = Boolean(app.extensionManager.setting.get(this.monitorEnabledId));
     if (!enabled) {
@@ -723,6 +726,19 @@ class UsageMonitorMonitor {
     if (this.monitorUI) {
       const value = app.extensionManager.setting.get(monitorSettings.id);
       this.monitorUI.showMonitor(monitorSettings, value);
+    }
+  };
+
+  updateHDDLabel = (partition?: string): void => {
+    // Show the watched partition name directly on the storage capsule.
+    const text = partition
+      || app.extensionManager.setting.get(this.settingsHDD.id)
+      || this.translate('Storage');
+    if (this.monitorHDDElement?.htmlMonitorRef) {
+      const textElement = this.monitorHDDElement.htmlMonitorRef.querySelector('.usagemonitor-text');
+      if (textElement) {
+        textElement.textContent = text;
+      }
     }
   };
 
