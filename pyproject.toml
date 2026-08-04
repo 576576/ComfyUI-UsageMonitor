@@ -1,7 +1,7 @@
 [project]
 name = "ComfyUI-UsageMonitor"
 description = "With this suit, you can see the resources monitor."
-version = "1.31.0"
+version = "1.31.5"
 license = { file = "LICENSE" }
 dependencies = ["torch", "nvidia-ml-py", "adlxpybind; sys_platform == 'win32'", "py-cpuinfo", "psutil"]
 

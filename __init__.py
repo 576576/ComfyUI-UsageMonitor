@@ -2,7 +2,7 @@
 @author: Crystian
 @title: UsageMonitor
 @nickname: UsageMonitor
-@version: 1.31.0
+@version: 1.31.5
 @project: "https://github.com/576576/ComfyUI-UsageMonitor",
 @description: A real-time resource monitor for ComfyUI: CPU, GPU, RAM, VRAM, GPU temperature and disk space.
 """
