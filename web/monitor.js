@@ -221,7 +221,19 @@ class UsageMonitorMonitor {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: 100
+            value: 0
+        });
+        Object.defineProperty(this, "textBoldId", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: 'UsageMonitor.TextBold'
+        });
+        Object.defineProperty(this, "textBold", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: false
         });
         Object.defineProperty(this, "monitorEnabledId", {
             enumerable: true,
@@ -242,6 +254,12 @@ class UsageMonitorMonitor {
             value: void 0
         });
         Object.defineProperty(this, "settingsTextOpacity", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "settingsTextBold", {
             enumerable: true,
             configurable: true,
             writable: true,
@@ -471,6 +489,23 @@ class UsageMonitorMonitor {
                 };
             }
         });
+        Object.defineProperty(this, "createSettingsTextBold", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: () => {
+                this.settingsTextBold = {
+                    id: this.textBoldId,
+                    name: this.translate('Text Bold'),
+                    category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'textbold'],
+                    type: 'boolean',
+                    defaultValue: this.textBold,
+                    onChange: (value) => {
+                        this.updateMonitorStyle(value);
+                    },
+                };
+            }
+        });
         Object.defineProperty(this, "createSettingsCPU", {
             enumerable: true,
             configurable: true,
@@ -692,9 +727,10 @@ class UsageMonitorMonitor {
                 app.ui.settings.addSetting(this.settingsRate);
                 app.ui.settings.addSetting(this.settingsMonitorHeight);
                 app.ui.settings.addSetting(this.settingsMonitorWidth);
+                app.ui.settings.addSetting(this.settingsTextBold);
+                app.ui.settings.addSetting(this.settingsTextOpacity);
                 app.ui.settings.addSetting(this.settingsLabelFontSize);
                 app.ui.settings.addSetting(this.settingsValueFontSize);
-                app.ui.settings.addSetting(this.settingsTextOpacity);
                 app.ui.settings.addSetting(this.monitorRAMElement);
                 app.ui.settings.addSetting(this.settingsHDD);
                 app.ui.settings.addSetting(this.monitorHDDElement);
@@ -738,7 +774,7 @@ class UsageMonitorMonitor {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: () => {
+            value: (textBoldOverride) => {
                 if (!this.monitorUI) {
                     return;
                 }
@@ -747,7 +783,10 @@ class UsageMonitorMonitor {
                 const labelFontSize = app.extensionManager.setting.get(this.labelFontSizeId);
                 const valueFontSize = app.extensionManager.setting.get(this.valueFontSizeId);
                 const textOpacity = app.extensionManager.setting.get(this.textOpacityId);
-                this.monitorUI.updateMonitorStyle(w, h, labelFontSize, valueFontSize, textOpacity);
+                const textBold = textBoldOverride !== undefined
+                    ? textBoldOverride
+                    : Boolean(app.extensionManager.setting.get(this.textBoldId));
+                this.monitorUI.updateMonitorStyle(w, h, labelFontSize, valueFontSize, textOpacity, textBold);
             }
         });
         Object.defineProperty(this, "updateDisplay", {
@@ -855,7 +894,7 @@ class UsageMonitorMonitor {
                 return settingsDialog?.settingsLookup ?? settingsDialog?.settingsParamLookup;
             }
         });
-        Object.defineProperty(this, "setMonitorEnabled", {
+        Object.defineProperty(this, "setMonitorsVisible", {
             enumerable: true,
             configurable: true,
             writable: true,
@@ -863,6 +902,14 @@ class UsageMonitorMonitor {
                 if (this.usagemonitorButtonGroup?.element) {
                     this.usagemonitorButtonGroup.element.style.display = enabled ? '' : 'none';
                 }
+            }
+        });
+        Object.defineProperty(this, "setMonitorEnabled", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: (enabled) => {
+                this.setMonitorsVisible(enabled);
                 const lookup = this.getSettingsLookup();
                 if (!lookup) {
                     return;
@@ -998,6 +1045,7 @@ class UsageMonitorMonitor {
                 this.createSettingsMonitorHeight();
                 this.createSettingsMonitorWidth();
                 this.createSettingsFontSize();
+                this.createSettingsTextBold();
                 this.createSettingsCPU();
                 this.createSettingsCPUTemp();
                 this.createSettingsRAM();

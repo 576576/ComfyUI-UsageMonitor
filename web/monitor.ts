@@ -93,11 +93,15 @@ class UsageMonitorMonitor {
   private readonly valueFontSizeId = 'UsageMonitor.ValueFontSize';
   private readonly valueFontSize = 10;
   private readonly textOpacityId = 'UsageMonitor.TextOpacity';
-  private readonly textOpacity = 100;
+  // Transparency semantics: 0 = fully opaque, 100 = fully transparent.
+  private readonly textOpacity = 0;
+  private readonly textBoldId = 'UsageMonitor.TextBold';
+  private readonly textBold = false;
   private readonly monitorEnabledId = 'UsageMonitor.MonitorEnabled';
   private settingsLabelFontSize: TMonitorSettings;
   private settingsValueFontSize: TMonitorSettings;
   private settingsTextOpacity: TMonitorSettings;
+  private settingsTextBold: TMonitorSettings;
   private settingsMonitorEnabled: TMonitorSettings;
   private originalSettingTypes: Record<string, string> = {};
 
@@ -338,6 +342,21 @@ class UsageMonitorMonitor {
     };
   };
 
+  createSettingsTextBold = (): void => {
+    this.settingsTextBold = {
+      id: this.textBoldId,
+      name: this.translate('Text Bold'),
+      category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'textbold'],
+      type: 'boolean',
+      defaultValue: this.textBold,
+      // @ts-ignore
+      onChange: (value: boolean): void => {
+        // Pass the new value directly; setting.get() may still return the old value here.
+        this.updateMonitorStyle(value);
+      },
+    };
+  };
+
   createSettingsCPU = (): void => {
     // CPU Variables
     this.monitorCPUElement = {
@@ -553,9 +572,10 @@ class UsageMonitorMonitor {
     app.ui.settings.addSetting(this.settingsRate);
     app.ui.settings.addSetting(this.settingsMonitorHeight);
     app.ui.settings.addSetting(this.settingsMonitorWidth);
+    app.ui.settings.addSetting(this.settingsTextBold);
+    app.ui.settings.addSetting(this.settingsTextOpacity);
     app.ui.settings.addSetting(this.settingsLabelFontSize);
     app.ui.settings.addSetting(this.settingsValueFontSize);
-    app.ui.settings.addSetting(this.settingsTextOpacity);
     // app.ui.settings.addSetting(this.settingsMonitorPosition);
     app.ui.settings.addSetting(this.monitorRAMElement);
 
@@ -601,7 +621,7 @@ class UsageMonitorMonitor {
     this.setMonitorEnabled(enabled);
   };
 
-  updateMonitorStyle = (): void => {
+  updateMonitorStyle = (textBoldOverride?: boolean): void => {
     if (!this.monitorUI) {
       return;
     }
@@ -610,7 +630,10 @@ class UsageMonitorMonitor {
     const labelFontSize = app.extensionManager.setting.get(this.labelFontSizeId);
     const valueFontSize = app.extensionManager.setting.get(this.valueFontSizeId);
     const textOpacity = app.extensionManager.setting.get(this.textOpacityId);
-    this.monitorUI.updateMonitorStyle(w, h, labelFontSize, valueFontSize, textOpacity);
+    const textBold = textBoldOverride !== undefined
+      ? textBoldOverride
+      : Boolean(app.extensionManager.setting.get(this.textBoldId));
+    this.monitorUI.updateMonitorStyle(w, h, labelFontSize, valueFontSize, textOpacity, textBold);
   };
 
   updateDisplay = (value: MenuDisplayOptions): void => {
@@ -710,11 +733,15 @@ class UsageMonitorMonitor {
     return settingsDialog?.settingsLookup ?? settingsDialog?.settingsParamLookup;
   };
 
-  setMonitorEnabled = (enabled: boolean): void => {
+  setMonitorsVisible = (enabled: boolean): void => {
     // Hide/show the monitor capsules (root element of all monitors).
     if (this.usagemonitorButtonGroup?.element) {
       this.usagemonitorButtonGroup.element.style.display = enabled ? '' : 'none';
     }
+  };
+
+  setMonitorEnabled = (enabled: boolean): void => {
+    this.setMonitorsVisible(enabled);
     const lookup = this.getSettingsLookup();
     if (!lookup) {
       return;
@@ -817,6 +844,7 @@ class UsageMonitorMonitor {
     this.createSettingsMonitorHeight();
     this.createSettingsMonitorWidth();
     this.createSettingsFontSize();
+    this.createSettingsTextBold();
     this.createSettingsCPU();
     this.createSettingsCPUTemp();
     this.createSettingsRAM();

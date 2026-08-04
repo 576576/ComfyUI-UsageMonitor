@@ -242,11 +242,19 @@ export class MonitorUI {
     return monitorSettings.htmlMonitorRef;
   };
 
-  updateMonitorStyle = (width: number, height: number, labelFontSize: number, valueFontSize: number, textOpacity: number): void => {
-    // eslint-disable-next-line max-len
+  updateMonitorStyle = (
+    width: number,
+    height: number,
+    labelFontSize: number,
+    valueFontSize: number,
+    textOpacity: number,
+    textBold: boolean,
+  ): void => {
     this.styleSheet.innerText = [
+      // eslint-disable-next-line max-len
       `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-content {height: ${height}px; width: ${width}px;}`,
-      `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-text {font-size: ${labelFontSize}px; opacity: ${textOpacity / 100};}`,
+      // eslint-disable-next-line max-len
+      `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-text {font-size: ${labelFontSize}px; opacity: ${(100 - textOpacity) / 100}; font-weight: ${textBold ? 'bold' : 'normal'};}`,
       `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-label {font-size: ${valueFontSize}px;}`,
     ].join('\n');
   };

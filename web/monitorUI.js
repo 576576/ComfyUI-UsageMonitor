@@ -293,10 +293,10 @@ export class MonitorUI {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: (width, height, labelFontSize, valueFontSize, textOpacity) => {
+            value: (width, height, labelFontSize, valueFontSize, textOpacity, textBold) => {
                 this.styleSheet.innerText = [
                     `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-content {height: ${height}px; width: ${width}px;}`,
-                    `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-text {font-size: ${labelFontSize}px; opacity: ${textOpacity / 100};}`,
+                    `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-text {font-size: ${labelFontSize}px; opacity: ${(100 - textOpacity) / 100}; font-weight: ${textBold ? 'bold' : 'normal'};}`,
                     `#usagemonitor-monitors-root .usagemonitor-monitor .usagemonitor-label {font-size: ${valueFontSize}px;}`,
                 ].join('\n');
             }

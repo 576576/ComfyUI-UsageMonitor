@@ -22,7 +22,7 @@ export declare class MonitorUI {
     updateAllAnimationDuration: (value: number) => void;
     updatedAnimationDuration: (monitorSettings: TMonitorSettings, value: number) => void;
     createMonitor: (monitorSettings?: TMonitorSettings) => HTMLDivElement;
-    updateMonitorStyle: (width: number, height: number, labelFontSize: number, valueFontSize: number, textOpacity: number) => void;
+    updateMonitorStyle: (width: number, height: number, labelFontSize: number, valueFontSize: number, textOpacity: number, textBold: boolean) => void;
     showMonitor: (monitorSettings: TMonitorSettings, value: boolean) => void;
     resetMaxVRAM: () => void;
 }
