@@ -94,9 +94,12 @@ class UsageMonitorMonitor {
   private readonly valueFontSize = 10;
   private readonly textOpacityId = 'UsageMonitor.TextOpacity';
   private readonly textOpacity = 100;
+  private readonly monitorEnabledId = 'UsageMonitor.MonitorEnabled';
   private settingsLabelFontSize: TMonitorSettings;
   private settingsValueFontSize: TMonitorSettings;
   private settingsTextOpacity: TMonitorSettings;
+  private settingsMonitorEnabled: TMonitorSettings;
+  private originalSettingTypes: Record<string, string> = {};
 
   // NO POSIBLE TO IMPLEMENT INSIDE THE PANEL
   // createSettingsMonitorPosition = (): void => {
@@ -126,6 +129,27 @@ class UsageMonitorMonitor {
   //     },
   //   };
   // };
+
+  createSettingsMonitorEnabled = (): void => {
+    this.settingsMonitorEnabled = {
+      id: this.monitorEnabledId,
+      name: this.translate('UsageMonitor'),
+      category: [this.translate('UsageMonitor')],
+      tooltip: this.translate('desc.Monitor enabled'),
+      type: 'boolean',
+      defaultValue: true,
+      // @ts-ignore
+      onChange: async(value: boolean): Promise<void> => {
+        try {
+          await this.updateServerMonitor(value);
+        } catch (error) {
+          console.error(error);
+          return;
+        }
+        this.setMonitorEnabled(value);
+      },
+    };
+  };
 
   createSettingsRate = (): void => {
     this.settingsRate = {
@@ -259,7 +283,7 @@ class UsageMonitorMonitor {
     this.settingsLabelFontSize = {
       id: this.labelFontSizeId,
       name: this.translate('Label Font Size'),
-      category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'fontsize'],
+      category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'labelfontsize'],
       tooltip: this.translate('desc.Label font size'),
       type: 'slider',
       attrs: {
@@ -277,7 +301,7 @@ class UsageMonitorMonitor {
     this.settingsValueFontSize = {
       id: this.valueFontSizeId,
       name: this.translate('Number Font Size'),
-      category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'fontsize'],
+      category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'numberfontsize'],
       tooltip: this.translate('desc.Number font size'),
       type: 'slider',
       attrs: {
@@ -295,7 +319,7 @@ class UsageMonitorMonitor {
     this.settingsTextOpacity = {
       id: this.textOpacityId,
       name: this.translate('Text Opacity'),
-      category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'opacity'],
+      category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'textopacity'],
       tooltip: this.translate('desc.Text opacity'),
       type: 'slider',
       attrs: {
@@ -521,6 +545,7 @@ class UsageMonitorMonitor {
   };
 
   createSettings = (): void => {
+    app.ui.settings.addSetting(this.settingsMonitorEnabled);
     app.ui.settings.addSetting(this.settingsRate);
     app.ui.settings.addSetting(this.settingsMonitorHeight);
     app.ui.settings.addSetting(this.settingsMonitorWidth);
@@ -529,14 +554,16 @@ class UsageMonitorMonitor {
     app.ui.settings.addSetting(this.settingsTextOpacity);
     // app.ui.settings.addSetting(this.settingsMonitorPosition);
     app.ui.settings.addSetting(this.monitorRAMElement);
-    app.ui.settings.addSetting(this.monitorCPUElement);
 
+    // Storage section (between Hardware and CPU)
+    app.ui.settings.addSetting(this.settingsHDD);
+    app.ui.settings.addSetting(this.monitorHDDElement);
     void this.getHDDsFromServer().then((data: string[]): void => {
       // @ts-ignore
       this.settingsHDD.options = data;
-      app.ui.settings.addSetting(this.settingsHDD);
     });
-    app.ui.settings.addSetting(this.monitorHDDElement);
+
+    app.ui.settings.addSetting(this.monitorCPUElement);
 
     void this.getGPUsFromServer().then((gpus: TGpuName[]): void => {
       let moreThanOneGPU = false;
@@ -560,6 +587,14 @@ class UsageMonitorMonitor {
     this.moveMonitor(this.menuDisplayOption);
 
     this.updateMonitorStyle();
+
+    const enabled = Boolean(app.extensionManager.setting.get(this.monitorEnabledId));
+    if (!enabled) {
+      this.updateServerMonitor(false).catch((error) => {
+        console.error('UsageMonitor: failed to stop monitor', error);
+      });
+    }
+    this.setMonitorEnabled(enabled);
   };
 
   updateMonitorStyle = (): void => {
@@ -654,6 +689,61 @@ class UsageMonitorMonitor {
     throw new Error(resp.statusText);
   };
 
+  updateServerMonitor = async(monitor: boolean): Promise<string> => {
+    const resp = await api.fetchApi('/usagemonitor/monitor/switch', {
+      method: 'POST',
+      body: JSON.stringify({monitor}),
+      cache: 'no-store',
+    });
+    if (resp.status === 200) {
+      return await resp.text();
+    }
+    throw new Error(resp.statusText);
+  };
+
+  getSettingsLookup = (): any => {
+    const settingsDialog: any = app.ui.settings;
+    return settingsDialog?.settingsLookup ?? settingsDialog?.settingsParamLookup;
+  };
+
+  setMonitorEnabled = (enabled: boolean): void => {
+    const lookup = this.getSettingsLookup();
+    if (!lookup) {
+      return;
+    }
+    for (const id of Object.keys(lookup)) {
+      if (id === this.monitorEnabledId || !id.startsWith('UsageMonitor.')) {
+        continue;
+      }
+      const setting = lookup[id];
+      if (!setting) {
+        continue;
+      }
+      if (enabled) {
+        this.restoreSettingType(id, setting);
+      } else {
+        this.hideSetting(id, setting);
+      }
+    }
+  };
+
+  restoreSettingType = (id: string, setting: any): void => {
+    const original = this.originalSettingTypes[id];
+    if (original !== undefined) {
+      setting.type = original;
+      delete this.originalSettingTypes[id];
+    } else if (setting.type === 'hidden') {
+      delete setting.type;
+    }
+  };
+
+  hideSetting = (id: string, setting: any): void => {
+    if (this.originalSettingTypes[id] === undefined) {
+      this.originalSettingTypes[id] = setting.type;
+    }
+    setting.type = 'hidden';
+  };
+
   updateServerGPU = async(index: number, data: TGpuSettings): Promise<string> => {
     const resp = await api.fetchApi(`/usagemonitor/monitor/GPU/${index}`, {
       method: 'PATCH',
@@ -714,6 +804,7 @@ class UsageMonitorMonitor {
       console.error('UsageMonitor: failed to load CPU name', error);
     }
     // this.createSettingsMonitorPosition();
+    this.createSettingsMonitorEnabled();
     this.createSettingsRate();
     this.createSettingsMonitorHeight();
     this.createSettingsMonitorWidth();

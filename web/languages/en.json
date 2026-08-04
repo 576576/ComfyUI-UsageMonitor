@@ -8,7 +8,8 @@
     "Capsule height": "Capsule height in pixels (top/bottom UI)",
     "Label font size": "Font size of the monitor label (e.g. CPU)",
     "Number font size": "Font size of the monitor value (e.g. 5%)",
-    "Text opacity": "Opacity of the monitor text (0-100%)"
+    "Text opacity": "Opacity of the monitor text (0-100%)",
+    "Monitor enabled": "Enable or disable the UsageMonitor. When disabled, the settings below are hidden."
   },
   "Overall Usage": "Overall Usage",
   "Usage2": " Usage",

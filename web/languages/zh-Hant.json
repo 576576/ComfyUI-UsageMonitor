@@ -8,7 +8,8 @@
     "Capsule height": "膠囊在介面上的像素高度（僅頂部/底部介面）",
     "Label font size": "監控文字（如 CPU）的字體大小",
     "Number font size": "監控數字（如 5%）的字體大小",
-    "Text opacity": "監控文字的透明度（0-100%）"
+    "Text opacity": "監控文字的透明度（0-100%）",
+    "Monitor enabled": "啟用或停用效能監視器。關閉後，下方的設定將被隱藏。"
   },
   "Overall Usage": "總體利用率",
   "Usage2": "佔用率",

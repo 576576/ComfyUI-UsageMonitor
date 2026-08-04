@@ -223,6 +223,12 @@ class UsageMonitorMonitor {
             writable: true,
             value: 100
         });
+        Object.defineProperty(this, "monitorEnabledId", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: 'UsageMonitor.MonitorEnabled'
+        });
         Object.defineProperty(this, "settingsLabelFontSize", {
             enumerable: true,
             configurable: true,
@@ -240,6 +246,43 @@ class UsageMonitorMonitor {
             configurable: true,
             writable: true,
             value: void 0
+        });
+        Object.defineProperty(this, "settingsMonitorEnabled", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "originalSettingTypes", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: {}
+        });
+        Object.defineProperty(this, "createSettingsMonitorEnabled", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: () => {
+                this.settingsMonitorEnabled = {
+                    id: this.monitorEnabledId,
+                    name: this.translate('UsageMonitor'),
+                    category: [this.translate('UsageMonitor')],
+                    tooltip: this.translate('desc.Monitor enabled'),
+                    type: 'boolean',
+                    defaultValue: true,
+                    onChange: async (value) => {
+                        try {
+                            await this.updateServerMonitor(value);
+                        }
+                        catch (error) {
+                            console.error(error);
+                            return;
+                        }
+                        this.setMonitorEnabled(value);
+                    },
+                };
+            }
         });
         Object.defineProperty(this, "createSettingsRate", {
             enumerable: true,
@@ -381,7 +424,7 @@ class UsageMonitorMonitor {
                 this.settingsLabelFontSize = {
                     id: this.labelFontSizeId,
                     name: this.translate('Label Font Size'),
-                    category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'fontsize'],
+                    category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'labelfontsize'],
                     tooltip: this.translate('desc.Label font size'),
                     type: 'slider',
                     attrs: {
@@ -397,7 +440,7 @@ class UsageMonitorMonitor {
                 this.settingsValueFontSize = {
                     id: this.valueFontSizeId,
                     name: this.translate('Number Font Size'),
-                    category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'fontsize'],
+                    category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'numberfontsize'],
                     tooltip: this.translate('desc.Number font size'),
                     type: 'slider',
                     attrs: {
@@ -413,7 +456,7 @@ class UsageMonitorMonitor {
                 this.settingsTextOpacity = {
                     id: this.textOpacityId,
                     name: this.translate('Text Opacity'),
-                    category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'opacity'],
+                    category: [this.translate('UsageMonitor'), this.translate('Graphic Configuration'), 'textopacity'],
                     tooltip: this.translate('desc.Text opacity'),
                     type: 'slider',
                     attrs: {
@@ -645,6 +688,7 @@ class UsageMonitorMonitor {
             configurable: true,
             writable: true,
             value: () => {
+                app.ui.settings.addSetting(this.settingsMonitorEnabled);
                 app.ui.settings.addSetting(this.settingsRate);
                 app.ui.settings.addSetting(this.settingsMonitorHeight);
                 app.ui.settings.addSetting(this.settingsMonitorWidth);
@@ -652,12 +696,12 @@ class UsageMonitorMonitor {
                 app.ui.settings.addSetting(this.settingsValueFontSize);
                 app.ui.settings.addSetting(this.settingsTextOpacity);
                 app.ui.settings.addSetting(this.monitorRAMElement);
-                app.ui.settings.addSetting(this.monitorCPUElement);
+                app.ui.settings.addSetting(this.settingsHDD);
+                app.ui.settings.addSetting(this.monitorHDDElement);
                 void this.getHDDsFromServer().then((data) => {
                     this.settingsHDD.options = data;
-                    app.ui.settings.addSetting(this.settingsHDD);
                 });
-                app.ui.settings.addSetting(this.monitorHDDElement);
+                app.ui.settings.addSetting(this.monitorCPUElement);
                 void this.getGPUsFromServer().then((gpus) => {
                     let moreThanOneGPU = false;
                     if (gpus.length > 1) {
@@ -681,6 +725,13 @@ class UsageMonitorMonitor {
                 this.updateAllWidget();
                 this.moveMonitor(this.menuDisplayOption);
                 this.updateMonitorStyle();
+                const enabled = Boolean(app.extensionManager.setting.get(this.monitorEnabledId));
+                if (!enabled) {
+                    this.updateServerMonitor(false).catch((error) => {
+                        console.error('UsageMonitor: failed to stop monitor', error);
+                    });
+                }
+                this.setMonitorEnabled(enabled);
             }
         });
         Object.defineProperty(this, "updateMonitorStyle", {
@@ -779,6 +830,83 @@ class UsageMonitorMonitor {
                 throw new Error(resp.statusText);
             }
         });
+        Object.defineProperty(this, "updateServerMonitor", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: async (monitor) => {
+                const resp = await api.fetchApi('/usagemonitor/monitor/switch', {
+                    method: 'POST',
+                    body: JSON.stringify({ monitor }),
+                    cache: 'no-store',
+                });
+                if (resp.status === 200) {
+                    return await resp.text();
+                }
+                throw new Error(resp.statusText);
+            }
+        });
+        Object.defineProperty(this, "getSettingsLookup", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: () => {
+                const settingsDialog = app.ui.settings;
+                return settingsDialog?.settingsLookup ?? settingsDialog?.settingsParamLookup;
+            }
+        });
+        Object.defineProperty(this, "setMonitorEnabled", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: (enabled) => {
+                const lookup = this.getSettingsLookup();
+                if (!lookup) {
+                    return;
+                }
+                for (const id of Object.keys(lookup)) {
+                    if (id === this.monitorEnabledId || !id.startsWith('UsageMonitor.')) {
+                        continue;
+                    }
+                    const setting = lookup[id];
+                    if (!setting) {
+                        continue;
+                    }
+                    if (enabled) {
+                        this.restoreSettingType(id, setting);
+                    }
+                    else {
+                        this.hideSetting(id, setting);
+                    }
+                }
+            }
+        });
+        Object.defineProperty(this, "restoreSettingType", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: (id, setting) => {
+                const original = this.originalSettingTypes[id];
+                if (original !== undefined) {
+                    setting.type = original;
+                    delete this.originalSettingTypes[id];
+                }
+                else if (setting.type === 'hidden') {
+                    delete setting.type;
+                }
+            }
+        });
+        Object.defineProperty(this, "hideSetting", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: (id, setting) => {
+                if (this.originalSettingTypes[id] === undefined) {
+                    this.originalSettingTypes[id] = setting.type;
+                }
+                setting.type = 'hidden';
+            }
+        });
         Object.defineProperty(this, "updateServerGPU", {
             enumerable: true,
             configurable: true,
@@ -862,6 +990,7 @@ class UsageMonitorMonitor {
                 catch (error) {
                     console.error('UsageMonitor: failed to load CPU name', error);
                 }
+                this.createSettingsMonitorEnabled();
                 this.createSettingsRate();
                 this.createSettingsMonitorHeight();
                 this.createSettingsMonitorWidth();
